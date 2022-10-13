@@ -108,10 +108,10 @@ int main(int argc, char *argv[])
 void usage()
 {
     fprintf(stderr, "===== Usage =====\n");
-    fprintf(stderr, "-f: G.711 file  name  \n");
+    fprintf(stderr, "-i: G.711 file  name  \n");
     fprintf(stderr, "-o: pcm output name \n");
     fprintf(stderr, "-c: codec name (alaw or mulaw)\n");
-    fprintf(stderr, "./g711_2_pcm -f input.alaw -c alaw  \n");
+    fprintf(stderr, "./g711_2_pcm -i input.alaw -o output.pcm -c alaw  \n");
 }
 
 
