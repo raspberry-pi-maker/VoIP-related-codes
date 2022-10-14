@@ -76,18 +76,18 @@ void usage()
 void do_process()
 {
 
-        int raw_sz = 0;
-        FILE *fwav;
-        wav_header_t wheader;
+    int raw_sz = 0;
+    FILE *fwav;
+    wav_header_t wheader;
     memset (&wheader, '\0', sizeof (wav_header_t));
     char *pcm_buf = dummy_get_raw_pcm (input.c_str(), &raw_sz);
     if(NULL == pcm_buf){
         return;
     }
-        get_wav_header (raw_sz, &wheader);
-        //dump_wav_header (&wheader);
+    get_wav_header (raw_sz, &wheader);
+    //dump_wav_header (&wheader);
 
-        // write out the .wav file
+    // write out the .wav file
     fwav = fopen(output.c_str(), "wb");
     fwrite(&wheader, 1, sizeof(wheader), fwav);
     fwrite(pcm_buf, 1, raw_sz, fwav);
@@ -100,60 +100,60 @@ void do_process()
 
 void get_wav_header(int raw_sz, wav_header_t *wh)
 {
-        // RIFF chunk
-        memcpy(wh->chunk_id, "RIFF", 4);
-        wh->chunk_size = 36 + raw_sz;
+    // RIFF chunk
+    memcpy(wh->chunk_id, "RIFF", 4);
+    wh->chunk_size = 36 + raw_sz;
 
-        // fmt sub-chunk (to be optimized)
-        memcpy(wh->sub_chunk1_id, "WAVEfmt ", strlen("WAVEfmt "));
-        wh->sub_chunk1_size = 16;
-        wh->audio_format = 1;
-        wh->num_channels = 1;
-        wh->sample_rate = 8000;
-        wh->bits_per_sample = 16;
-        wh->block_align = wh->num_channels * wh->bits_per_sample / 8;
-        wh->byte_rate = wh->sample_rate * wh->num_channels * wh->bits_per_sample / 8;
+    // fmt sub-chunk (to be optimized)
+    memcpy(wh->sub_chunk1_id, "WAVEfmt ", strlen("WAVEfmt "));
+    wh->sub_chunk1_size = 16;
+    wh->audio_format = 1;
+    wh->num_channels = 1;
+    wh->sample_rate = 8000;
+    wh->bits_per_sample = 16;
+    wh->block_align = wh->num_channels * wh->bits_per_sample / 8;
+    wh->byte_rate = wh->sample_rate * wh->num_channels * wh->bits_per_sample / 8;
 
-        // data sub-chunk
-        memcpy(wh->sub_chunk2_id, "data", strlen("data"));
-        wh->sub_chunk2_size = raw_sz;
+    // data sub-chunk
+    memcpy(wh->sub_chunk2_id, "data", strlen("data"));
+    wh->sub_chunk2_size = raw_sz;
 }
 
 char* dummy_get_raw_pcm (const char *p, int *bytes_read)
 {
-        long lSize;
-        char *pcm_buf;
-        size_t result;
-        FILE *fp_pcm;
+    long lSize;
+    char *pcm_buf;
+    size_t result;
+    FILE *fp_pcm;
 
-        fp_pcm = fopen (p, "rb");
-        if (fp_pcm == NULL) {
-                fprintf(stderr, "pcm File[%s] open error", p);
-                return NULL;
-        }
+    fp_pcm = fopen (p, "rb");
+    if (fp_pcm == NULL) {
+        fprintf(stderr, "pcm File[%s] open error", p);
+        return NULL;
+    }
 
-        // obtain file size:
-        fseek (fp_pcm , 0 , SEEK_END);
-        lSize = ftell (fp_pcm);
-        rewind (fp_pcm);
+    // obtain file size:
+    fseek (fp_pcm , 0 , SEEK_END);
+    lSize = ftell (fp_pcm);
+    rewind (fp_pcm);
 
-        // allocate memory to contain the whole file:
-        pcm_buf = (char*) malloc (sizeof(char) * lSize);
-        if (pcm_buf == NULL) {
-                fprintf(stderr, "pcm File[%s] memory allocation error", p);
-    fclose(fp_pcm);
-                return NULL;
-        }
+    // allocate memory to contain the whole file:
+    pcm_buf = (char*) malloc (sizeof(char) * lSize);
+    if (pcm_buf == NULL) {
+        fprintf(stderr, "pcm File[%s] memory allocation error", p);
+        fclose(fp_pcm);
+        return NULL;
+    }
 
-        // copy the file into the pcm_buf:
-        result = fread (pcm_buf, 1, lSize, fp_pcm);
-        if (result != lSize) {
-                fprintf(stderr, "pcm File[%s] reading error", p);
-    fclose(fp_pcm);
-    free(pcm_buf);
-                return NULL;
-        }
+    // copy the file into the pcm_buf:
+    result = fread (pcm_buf, 1, lSize, fp_pcm);
+    if (result != lSize) {
+        fprintf(stderr, "pcm File[%s] reading error", p);
+        fclose(fp_pcm);
+        free(pcm_buf);
+        return NULL;
+    }
 
-        *bytes_read = (int) lSize;
-        return pcm_buf;
+    *bytes_read = (int) lSize;
+    return pcm_buf;
 }
