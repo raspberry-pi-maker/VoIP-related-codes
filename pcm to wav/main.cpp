@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <iostream>
-#include <list>
 #include <string>
 
 using namespace std;
