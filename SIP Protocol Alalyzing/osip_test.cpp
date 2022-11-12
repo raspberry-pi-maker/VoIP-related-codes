@@ -108,9 +108,13 @@ int main(int argc, const char * argv[])
         else{ fprintf(stderr, "osip_messsage_init success\n");}
         fflush(stderr);
         i = osip_message_parse(sip, pstr[x], strlen(pstr[x]));
-        //if (i!=0) { fprintf(stderr, "cannot allocate 2\n"); return -1; }  
+        if (i != 0) { 
+            fprintf(stderr, "cannot allocate 2\n"); return -1; 
+            fflush(stderr);
+            osip_message_free(sip);
+            break;
+        }  
         //else{ fprintf(stderr, "osip_messsage_parse success\n");}
-        fflush(stderr);
 
 
         i = osip_message_to_str(sip, &dest, &length);
