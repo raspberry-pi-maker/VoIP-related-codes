@@ -37,16 +37,14 @@ then build the source codes to make binaries(so files)
 
 ##  Set library path
 If you run the last commands(make install), the so files are copied to "/usr/local/lib".
-However, many Linux distributions do not include this directory in LD_LIBRARY_PATH.
-You can check the LD_LIBRARY_PATH like this.
+However, many Linux distributions do not include this directory in shared library path
 
-``` bash
-$ echo $LD_LIBRARY_PATH
-```
 
-Add this line to youe shell initialization file (.bashrc)
+Add this file into /etc/ld.so.conf.d directory and run ldconfig command
 ``` bash
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+[spypiggy@localhost bin]$ cat /etc/ld.so.conf.d/osip.conf
+/usr/local/lib/
+[spypiggy@localhost bin]$ sudo ldconfig
 ```
 <br>
 

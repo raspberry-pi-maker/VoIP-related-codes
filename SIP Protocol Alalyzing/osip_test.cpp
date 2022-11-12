@@ -89,112 +89,108 @@ void debug_msg(osip_message_t *sip);
 
 int main(int argc, const char * argv[])
 {
-        char *dest=NULL;
-        size_t length=0;
-        int i;
-  const char *pstr[3] ;
-  pstr[0] = msg0;
-  pstr[1] = msg1;
-  pstr[2] = msg2;
+    char *dest=NULL;
+    size_t length=0;
+    int i;
+    const char *pstr[3] ;
+    pstr[0] = msg0;
+    pstr[1] = msg1;
+    pstr[2] = msg2;
 
-        osip_message_t *sip;
-        //fprintf(stdout, "input message len:%d\n", strlen(temp_data));
+    osip_message_t *sip;
+    //fprintf(stdout, "input message len:%d\n", strlen(temp_data));
 
-        parser_init(); //아주 중요함. osip_init 대신 이 함수로 충분함. 이 함수를 생략하면 segmentation fault 발생
-        for(int x = 0; x < 3; x++){
-    fprintf(stderr, "input message:\n====================================\n%s\n=================================\n\n", pstr[x]);
-    i = osip_message_init(&sip);
-    if (i!=0) { fprintf(stderr, "cannot allocate 1\n"); return -1; }
-    else{ fprintf(stderr, "osip_messsage_init success\n");}
-    fflush(stderr);
-    i = osip_message_parse(sip, pstr[x], strlen(pstr[x]));
-    //if (i!=0) { fprintf(stderr, "cannot allocate 2\n"); return -1; }  //에러가 발생하면 메시지 포맷에 에러가 있는 경우가  대부분
-    //else{ fprintf(stderr, "osip_messsage_parse success\n");}
-    fflush(stderr);
+    parser_init(); //Very Important. Instead of osip_init, use parser_init. if you ommit this call, segmentation fault occurs.
+    for(int x = 0; x < 3; x++){
+        fprintf(stderr, "input message:\n====================================\n%s\n=================================\n\n", pstr[x]);
+        i = osip_message_init(&sip);
+        if (i!=0) { fprintf(stderr, "cannot allocate 1\n"); return -1; }
+        else{ fprintf(stderr, "osip_messsage_init success\n");}
+        fflush(stderr);
+        i = osip_message_parse(sip, pstr[x], strlen(pstr[x]));
+        //if (i!=0) { fprintf(stderr, "cannot allocate 2\n"); return -1; }  
+        //else{ fprintf(stderr, "osip_messsage_parse success\n");}
+        fflush(stderr);
 
 
-    i = osip_message_to_str(sip, &dest, &length);
-    if (i!=0) { fprintf(stderr, "cannot allocate 3\n"); return -1; }
+        i = osip_message_to_str(sip, &dest, &length);
+        if (i!=0) { fprintf(stderr, "cannot allocate 3\n"); return -1; }
 
-    //fprintf(stdout, "message:\n%s\n", dest);
-    osip_free(dest);
+        //fprintf(stdout, "message:\n%s\n", dest);
+        osip_free(dest);
 
-    debug_msg(sip);
-    fprintf(stderr, "\n\n");
+        debug_msg(sip);
+        fprintf(stderr, "\n\n");
 
-    osip_message_free(sip);
-    usleep(0);
+        osip_message_free(sip);
+        usleep(0);
 
-        }
-        return 0;
+    }
+    return 0;
 }
 
-// https://www.antisip.com/doc/osip2/structosip__message.html 참조
+// https://www.antisip.com/doc/osip2/structosip__message.html 
 void debug_msg(osip_message_t *sip)
 {
-        char *buf;
-        int size, x;
-        size_t length;
+    char *buf;
+    int size, x;
+    size_t length;
 
-        fprintf(stderr, "sip_version      : %s\n", sip->sip_version);
-  if(sip->sip_method){  //Request
-    fprintf(stderr, "sip_method       : %s\n", sip->sip_method);
-  }
-  else{
-    fprintf(stderr, "sip_method       : %s\n", "++++++++++++++++ Response");
-    fprintf(stderr, "reason_phrase    : %s\n", sip->reason_phrase);
-  }
+    fprintf(stderr, "sip_version      : %s\n", sip->sip_version);
+    if(sip->sip_method){  //Request
+        fprintf(stderr, "sip_method       : %s\n", sip->sip_method);
+    }
+    else{
+        fprintf(stderr, "sip_method       : %s\n", "++++++++++++++++ Response");
+        fprintf(stderr, "reason_phrase    : %s\n", sip->reason_phrase);
+    }
 
-  //fprintf(stderr, "sip_method       : %s\n", osip_message_get_method(sip));
-  fprintf(stderr, "status code      : %d\n", sip->status_code);
-        //fprintf(stderr, "message property : %d\n", sip->message_property);
+    //fprintf(stderr, "sip_method       : %s\n", osip_message_get_method(sip));
+    fprintf(stderr, "status code      : %d\n", sip->status_code);
+    //fprintf(stderr, "message property : %d\n", sip->message_property);
 
-        osip_call_id_to_str(sip->call_id, &buf );
-        fprintf(stderr, "call_id          : %s\n",buf);
+    osip_call_id_to_str(sip->call_id, &buf );
+    fprintf(stderr, "call_id          : %s\n",buf);
+    osip_free(buf);
+
+    osip_from_to_str(sip->from, &buf );
+    fprintf(stderr, "from             : %s\n", buf);
+    osip_free(buf);
+
+    osip_to_to_str(sip->to, &buf ) ;
+    fprintf(stderr, "to               : %s\n", buf);
+    osip_free(buf);
+
+    osip_cseq_to_str(sip->cseq, &buf ) ;
+    fprintf(stderr, "cseq             : %s\n", buf);
+    osip_free(buf);
+
+    size = osip_list_size(&sip->bodies);
+    for(x = 0; x < size; x++){
+        osip_body_t *body = (osip_body_t *)osip_list_get((const osip_list_t *)&sip->bodies, x);
+        osip_body_to_str(body, &buf, &length) ;
+        fprintf(stderr, "body             : %s\n", buf);
         osip_free(buf);
 
-        osip_from_to_str(sip->from, &buf );
-        fprintf(stderr, "from             : %s\n", buf);
+    }
+
+    size = osip_list_size(&sip->headers);
+    for(x = 0; x < size; x++){
+        osip_header_t *head = (osip_header_t *)osip_list_get((const osip_list_t *)&sip->headers, x);
+        osip_header_to_str(head, &buf) ;
+        fprintf(stderr, "head             : %s\n", buf);
         osip_free(buf);
 
-        osip_to_to_str(sip->to, &buf ) ;
-        fprintf(stderr, "to               : %s\n", buf);
+    }
+
+    size = osip_list_size(&sip->contacts);
+    for(x = 0; x < size; x++){
+        osip_contact_t *contact = (osip_contact_t *)osip_list_get((const osip_list_t *)&sip->contacts, x);
+        osip_contact_to_str(contact, &buf) ;
+        fprintf(stderr, "contact          : %s\n", buf);
         osip_free(buf);
 
-        osip_cseq_to_str(sip->cseq, &buf ) ;
-        fprintf(stderr, "cseq             : %s\n", buf);
-        osip_free(buf);
-
-        size = osip_list_size(&sip->bodies);
-        for(x = 0; x < size; x++){
-                osip_body_t *body = (osip_body_t *)osip_list_get((const osip_list_t *)&sip->bodies, x);
-                osip_body_to_str(body, &buf, &length) ;
-                fprintf(stderr, "body             : %s\n", buf);
-                osip_free(buf);
-
-        }
-
-        size = osip_list_size(&sip->headers);
-        for(x = 0; x < size; x++){
-                osip_header_t *head = (osip_header_t *)osip_list_get((const osip_list_t *)&sip->headers, x);
-                osip_header_to_str(head, &buf) ;
-                fprintf(stderr, "head             : %s\n", buf);
-                osip_free(buf);
-
-        }
-
-        size = osip_list_size(&sip->contacts);
-        for(x = 0; x < size; x++){
-                osip_contact_t *contact = (osip_contact_t *)osip_list_get((const osip_list_t *)&sip->contacts, x);
-                osip_contact_to_str(contact, &buf) ;
-                fprintf(stderr, "contact          : %s\n", buf);
-                osip_free(buf);
-
-        }
-
-
-
-
+    }
 }
 
 
