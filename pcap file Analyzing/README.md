@@ -11,5 +11,8 @@ Example of filtering only RTP (G.711 payload) in a pcap file to show RTP informa
 ``` bash
 # build command
 g++ basic_pcap.cpp  -lpcap -o basic_pcap
+
+#run command
+./basic_pcap -f rtp_example.pcap
 ```
 
