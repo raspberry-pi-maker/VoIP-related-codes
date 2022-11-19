@@ -66,7 +66,7 @@ drwxrwxr-x. 16 spypiggy spypiggy    211 Nov 18 17:40 ..
 -rw-rw-r--.  1 spypiggy spypiggy   3974 Nov 18 20:16 global.h
 -rw-rw-r--.  1 spypiggy spypiggy 147286 Nov 18 18:18 rtp_example.pcap
 -rw-rw-r--.  1 spypiggy spypiggy   5144 Nov 18 20:06 util.cpp
-
-
 ```
-
+<br>
+Two pcm(or wav) files are actually one call. One is a voice from agent A (10.1.3.143) to agent B (10.1.6.18) and the other is the opposite. Therefore, two voice files should be treated as one call. In many cases, two mono voice files may be made into one stereo voice file.
+<br><br>
