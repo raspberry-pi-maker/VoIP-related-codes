@@ -147,7 +147,7 @@ void rtp_packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const
     const u_char *pdata;
     int udp_size = 0;
     char from_ip[64], to_ip[64];
-    
+    int offset = RTP_HEADER_OFFSET;
     iph = (struct ip *)packet;
     pdata = packet + sizeof(struct ip) + sizeof(struct udphdr);
     udp_size = ntohs(udph->len);
@@ -156,6 +156,9 @@ void rtp_packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const
     uint32_t rtp_ssrc = get_ssrc((RTP_HEADER *)pdata);
     uint32_t rtp_ts = get_timestamp((RTP_HEADER *)pdata);
     uint32_t rtp_seq = get_seq((RTP_HEADER *)pdata);
+    int rtp_extension = get_extension((RTP_HEADER *)pdata);
+    int rtp_cc = get_cc((RTP_HEADER *)pdata);
+    
     int rtp_payload = get_payload((RTP_HEADER *)pdata);
     int rtp_version = get_version((RTP_HEADER *)pdata);
 
@@ -164,6 +167,17 @@ void rtp_packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const
         // fprintf(stderr, "ip size:%d, udp_size[%d] RTP version:%d payload:%d =>skip processing", ip_size, udp_size, rtp_version, (int)payload);
         return;
     }
+    //I've never seen an rtp header with cc and header extensions.
+    offset += (4 * rtp_cc); //cc(Count of CSRC)  CSRC (Contributing Source) Identifiers : 32 bit
+    if(rtp_extension){
+        uint16_t extension_header_ID, extension_header_length;
+        memcpy(&extension_header_ID, pdata + offset, sizeof(uint16_t));
+        memcpy(&extension_header_length, pdata + offset + sizeof(uint16_t), sizeof(uint16_t));
+        extension_header_ID = ntohs(extension_header_ID);
+        extension_header_length = ntohs(extension_header_length);
+        offset += (sizeof(uint16_t) * 2 + extension_header_length);
+    }
+    
     u_char src_ip[4], dst_ip[4];
     memcpy(&src_ip, &iph->ip_src, 4);
     memcpy(&dst_ip, &iph->ip_dst, 4);
@@ -171,5 +185,5 @@ void rtp_packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const
     CALL *call = findcall(src_ip, dst_ip, rtp_ssrc);
     if(NULL == call) call = add_call(src_ip, dst_ip, rtp_ssrc);
 
-    add_rtp(call, pdata + RTP_HEADER_OFFSET, udp_size -20, rtp_payload);
+    add_rtp(call, pdata + offset, udp_size -20, rtp_payload);
 }

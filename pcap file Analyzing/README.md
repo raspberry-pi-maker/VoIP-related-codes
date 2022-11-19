@@ -32,6 +32,19 @@ I will use the SSRC value of RTP and the incoming and outgoing IP values to dist
 
 <br>
 
+
+### RTP header
+The rtp header has the following structure. <br>
+
+![SIP Call](./basic_pcap_recording/image/1.png)
+
+<br>
+In most cases, red painted areas are not used. Whether or not this area is used is determined by the X and CC values of the RTP header.
+I have never seen an RTP header where this value exists. However, the reference code allows it to work regardless of the existence of this value.
+
+<br><br>
+
+
 ``` bash
 # build command
 g++ basic_pcap_recording.cpp util.cpp  -lpcap -o basic_pcap_recording
