@@ -186,7 +186,6 @@ Analyzing RTP Packet here !!
 */
 void rtp_packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet, const struct udphdr *udph)
 {
-    // IP 헤더 구조체
     struct ip *iph;
     const u_char *pdata;
     int udp_size = 0;
