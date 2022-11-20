@@ -1,4 +1,4 @@
-# SIP Protocol Analyzing
+# SIP Protocol Analyzing using osip
 
 There are many libraries those can be used to analyze SIP protocol.
 I use Sofia Library made by Nokia a lot in actual SIP project. But this time, I will make a protocol analysis program using the OSIP library.
