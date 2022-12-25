@@ -109,7 +109,7 @@ int main(int argc, const char * argv[])
         fflush(stderr);
         i = osip_message_parse(sip, pstr[x], strlen(pstr[x]));
         if (i != 0) { 
-            fprintf(stderr, "cannot allocate 2\n"); return -1; 
+            fprintf(stderr, "cannot allocate 2\n");
             fflush(stderr);
             osip_message_free(sip);
             break;
