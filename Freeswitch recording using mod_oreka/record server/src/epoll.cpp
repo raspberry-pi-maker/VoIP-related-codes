@@ -36,7 +36,7 @@ int buildsocket(int port)
     epoll_event event;
     
 	event.data.fd = sfd;
-	event.events = EPOLLIN | EPOLLET;
+	event.events = EPOLLIN ;	//level trigger mode is more safe for me
 	int rc = epoll_ctl (efd, EPOLL_CTL_ADD, sfd, &event);
 	if (rc == -1){
 		LogToFile(err, "socket epoll_ctl error");
