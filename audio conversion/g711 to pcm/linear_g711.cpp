@@ -1,7 +1,5 @@
 /*
 This program converts 8k, 16bit pcm file to g.711 format(8k, 8bit)
-build command : g++ linear_g711.cpp -o linear_g711
-
 */
 
 #include <stdio.h>
@@ -180,13 +178,13 @@ void do_process()
     long lSize;
 
 	fseek (fh , 0 , SEEK_END);
-	lSize = ftell (fh);
+	lSize = ftell (fh) / sizeof(int16_t);
 	rewind (fh);
     for(long x = 0; x < lSize; x++){
         fread(&r, sizeof(int16_t), 1, fh);
         if(0 == payload) w = linear2ulaw(r);
         else w = linear2alaw(r);
-        fwrite(&w, sizeof(int16_t), 1, fh_711);
+        fwrite(&w, sizeof(u_char), 1, fh_711);
     }
     
     
