@@ -40,6 +40,8 @@ You can calculate the dynamic range in decibels between two sounds with the foll
 
 ![DB](./image/1.png)
 
+Here, P is the amount of power, such as power, energy, or sound intensity, and E represents the amount of voltage or sound pressure.
+<br>
 
 where A1 and A2 are the amplitudes of the two sounds. With a sample size of 1 bit, the dynamic range is zero, because only one amplitude is possible.
 
