@@ -12,7 +12,7 @@ This code creates 8000Hz, 16bit, mono PCM files.
 ./g711_2_pcm -i input.alaw -o output.pcm -c alaw
 ./g711_2_pcm -i input.ulaw -o output.pcm -c mulaw
 ```
-
+<br><br>
  
 # PCM(8k, 16bit) to G711(8k, 8bit)
 
