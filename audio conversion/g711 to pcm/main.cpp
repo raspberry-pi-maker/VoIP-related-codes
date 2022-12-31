@@ -1,3 +1,8 @@
+/*
+This program converts 8k, 16bit pcm file to g.711 format(8k, 8bit)
+build command : g++ main.cpp -o g711_2_pcm
+*/
+
 #include <stdio.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -25,6 +30,9 @@ const int TABLE_SIZE = 8;
 const int BIAS = 0x84;		/* Bias for linear code. */
 const int CLIP = 8159;
 
+/*
+8k sampling ,8bit sample size => 8k sampling, 16bit sample size
+*/
 int16_t ulaw2linear(u_char u_val)
 {
   int16_t t;
@@ -42,6 +50,9 @@ int16_t ulaw2linear(u_char u_val)
 }
 
 
+/*
+8k sampling ,8bit sample size => 8k sampling, 16bit sample size
+*/
 int16_t alaw2linear(u_char	a_val)
 {
    int16_t t;
