@@ -68,11 +68,11 @@ And before you write to me, yes, I know there are other solutions out there for 
 <br><br>
 ## Mixing digital audio 
 
-Working in the call center field, sometimes you need to mix two mono format PCM files.
+Working in the call center field, sometimes I need to mix two mono format PCM files.
 In most cases, tools such as sox and ffmpeg will do the job easily.
 How to use the sox command is explained in detail in [Useful ffmpeg sox commands](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/audio%20conversion/Useful%20ffmpeg%20sox%20commands)
 
-However, sometimes there is a need to mix voice packets in real time in the program source code. In this case, it is difficult to use sox and ffmpeg. Let's use the above to mix two PCM voices by hand. A slight application of the source code can be applied even when real-time processing is required.
+However, sometimes there is a need to mix voice packets in real time in the program source code. In this case, it is difficult to use sox and ffmpeg. Let's use the above article to mix two PCM audios. The source code(pcm_mix.cpp) can be applied even when real-time processing is required.
 
 I will use 8000, 16 bit, mono format pcm file. Sampling data has 16 bit values. Therefore, it has values from -32,768 to 32,767.
 
