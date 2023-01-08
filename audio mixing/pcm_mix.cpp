@@ -104,7 +104,6 @@ void do_process()
 
     int16_t r1, r2, r3;
     long fsize1, fsize2, lSize;
-    char buf[12];
 
     fseek (fh1 , 0 , SEEK_END);
     fsize1 = ftell (fh1) / sizeof(int16_t);
