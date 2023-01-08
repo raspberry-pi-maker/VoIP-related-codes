@@ -168,7 +168,7 @@ void do_process()
     }
     FILE *fh_711 = fopen(output.c_str(), "w+");
     if(!fh_711){
-        fprintf(stderr, "cannot open file[%s]\n",input.c_str());
+        fprintf(stderr, "cannot open file[%s]\n",output.c_str());
         fclose(fh);
         exit(0);        
     }
