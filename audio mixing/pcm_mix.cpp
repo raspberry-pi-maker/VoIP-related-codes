@@ -106,14 +106,14 @@ void do_process()
     long fsize1, fsize2, lSize;
     char buf[12];
 
-	fseek (fh1 , 0 , SEEK_END);
-	fsize1 = ftell (fh1) / sizeof(int16_t);
-	rewind (fh1);
-	fseek (fh2 , 0 , SEEK_END);
-	fsize2 = ftell (fh2) / sizeof(int16_t);
-	rewind (fh2);
+    fseek (fh1 , 0 , SEEK_END);
+    fsize1 = ftell (fh1) / sizeof(int16_t);
+    rewind (fh1);
+    fseek (fh2 , 0 , SEEK_END);
+    fsize2 = ftell (fh2) / sizeof(int16_t);
+    rewind (fh2);
     lSize = min(fsize1, fsize2);
-    
+
     for(long x = 0; x < lSize; x++){
         fread(&r1, sizeof(int16_t), 1, fh1);
         fread(&r2, sizeof(int16_t), 1, fh2);
