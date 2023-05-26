@@ -36,7 +36,7 @@ then build the source codes to make binaries(so files)
 <br>
 
 ##  Set library path
-If you run the last commands(make install), the so files are copied to "/usr/local/lib".
+If you run the last commands(make install), the oSip related so files are copied to "/usr/local/lib".
 However, many Linux distributions do not include this directory in shared library path
 
 
