@@ -78,7 +78,7 @@ Of course, information about RMS energy can be output along with a visual graph.
 
 ![audio](./image/audio-7.png) <br /><br />
 
-***Caution : The value of the RMS energy varies according to the frame size. If the frame size increases, the RMS energy value also increases. Therefore, note that even the same audio file may have different RMS energy values depending on the frame size.***  
+***Caution : The value of the RMS energy varies according to the frame size. If the frame size increases, the RMS energy value also increases. Therefore, note that even the same audio file may have different RMS energy values depending on the frame size and hop size.***  
 
 <br /><br />
 
