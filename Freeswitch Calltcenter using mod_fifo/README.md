@@ -150,9 +150,9 @@ Add contents for FIFO test as follows under blueivr context in dialplan director
     ......
     
     <extension name="FIFO_TEST">
-	    <condition field="destination_number" expression="^(2\d{3})$">
-            <action application="set" data="continue_on_fail=true"/>
-        <action application="log" data="ALERT ==== [2XXX] FIFO TEST START ==== "/>
+	    <condition field="destination_number" expression="^(2000)$">
+        <action application="set" data="continue_on_fail=true"/>
+        <action application="log" data="ALERT ==== [2000] FIFO TEST START ==== "/>
         <action application="fifo" data="fifoqueue in /$${sounds_dir}/exit-message.wav $${sounds_dir}/music-on-hold.wav"/> 
       </condition>
     </extension>
@@ -163,8 +163,51 @@ Add contents for FIFO test as follows under blueivr context in dialplan director
 </include>
 ```
 
+<br/>
+The above dial plan can be implemented in one scenario using lua script.
 <br/><br/>
-Calls to 2xxx are placed in a FIFO queue that works as follows:
+
+``` xml
+<include>
+  <context name="blueivr">
+
+    ......
+    
+    <extension name="FIFO_TEST2">
+	    <condition field="destination_number" expression="^(2001)$">
+        <action application="set" data="continue_on_fail=true"/>
+        <action application="log" data="ALERT ==== [2001] FIFO TEST START ==== "/>
+        <action application="lua" data="fifo_test.lua"/> 
+      </condition>
+    </extension>
+    ......
+
+  </context>
+</include>
+```
+<br/><br/>
+And this is lua script.
+
+``` lua
+me = session:getVariable("destination_number")
+you = session:getVariable("caller_id_number")
+g_log_ani = you
+g_log_dnis = me
+
+-- log line
+function ScenarioLog(strLevel, strLog)
+    local sLine = "[" .. g_log_ani .. "][" .. g_log_dnis .. "]" .. strLog
+    freeswitch.consoleLog(strLevel, sLine)
+end
+
+ScenarioLog("INFO", "Test FIFO Scenario Start\n")
+session:answer()
+session:execute("fifo", "fifoqueue in /$${sounds_dir}/exit-message.wav $${sounds_dir}/music-on-hold.wav")
+
+```
+
+<br/><br/>
+Calls to 2000 or 2001 are placed in a FIFO queue that works as follows:
 
 * __It listens to music-on-hold.wav repeatedly until the agent connects.__
 * __When the agent connects, you will hear exit-message.wav.__
