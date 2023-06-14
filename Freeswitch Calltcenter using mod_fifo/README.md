@@ -1,6 +1,6 @@
 # Freeswitch Callcenter using mod_fifo
 
-Recently, I made a call center using mod_callcenter. FIFO stands for "First In, First Out". As calls enter the queue, they are arranged in order so that the call that has been in the queue for the longest time will be the first call to get answered. Generally FIFO call queues are used in "first come, first served" call scenarios such as customer service call centers.
+Recently, I made a call center using mod_fifo. FIFO stands for "First In, First Out". As calls enter the queue, they are arranged in order so that the call that has been in the queue for the longest time will be the first call to get answered. Generally FIFO call queues are used in "first come, first served" call scenarios such as customer service call centers.
 
 An alternative to mod_fifo is mod_callcenter which is more of a traditional ACD application and was contributed by a member of the FreeSWITCH™ community.
 However, mod_fifo is sufficient for a simple call center implementation.
