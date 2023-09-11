@@ -22,11 +22,32 @@ The fs_cli program provided by Freeswitch was also developed using ESL for C lan
 <br>
 
 In Freeswitch 1.6, which I use mostly, ESL for Python is only provided for Python 2. So some work is required to get it to work in Python 3. I hope you don't use Python 2 anymore.
-The following work was done on Ubuntu 20.04.
 <br><br>
+
+## Python3 ESL pip install
+<br>
+The easiest way to install ESL for Python is to install it from PyPi using the pip command. 
+
+The following is how to install on Rocky (CentOS) Linux 8.
+``` bash
+$ sudo dnf install python3 python3-devel python3-pip
+$ sudo dnf install swig
+$ pip3 install python-ESL
+```
+
+<br>
+The following is how to install on Ubuntu.
+
+``` bash
+$ sudo apt -y update
+$ sudo apt -y dist-upgrade
+$ sudo apt-get install python3 python3-dev python3-pip
+$ sudo apt-get install -y swig
+```
 
 ## Python3 ESL build
 <br>
+The following work was done on Ubuntu 20.04.
 python3, python3-dev (devel for centOS) must be installed in advance. In the case of centOS, if there is no symbolic link to the /usr/lib64/libpython3.6m.so file, it is created.
 <br><br>
 
