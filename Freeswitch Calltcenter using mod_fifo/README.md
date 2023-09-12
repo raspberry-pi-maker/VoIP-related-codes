@@ -336,16 +336,16 @@ Test with the following process.
 * __Check if stations 1001 and 1002 are registered in Freeswitch.__
 * __Dial 6*0 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive FIFO calls.__
 * __Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).__
-* __It should ring on either 1001 or 1002 extensions.__
-* __When the ringing extension receives a call, the sound source (exit-message.wav) is heard from the external phone.__
+* __It should ring on both 1001 and 1002 extensions.__
+* __When one of the the ringing extensions receives a call, the sound source (exit-message.wav) is heard from the external phone.__
 * __A call is made between the agent and the customer (external phone).__
-* __If you repeat the above process, this time the phone that did not ring in front of you will ring. That is, calls are distributed in a round-robin fashion.__
 * __Dial 1001 to 6#0. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_out.wav). Now, one station can receive FIFO calls.__
 * __Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).__
 * __From now on, only extension 1002 should ring.__
 
 <br/><br/>
-Through the test, it was confirmed that calls were distributed in a round-robin manner to extension phones participating in FIFO.
 
+# Wrapping up
+Through the test, it was confirmed that call is distributed in all extension phones participating in FIFO.
 In fact, an important part of FIFO is to make several calls at the same time and check whether they are connected to the agent in order.
-I haven't tested this part due to the lack of an external phone, but I expect it to be.
+However, a typical call center does not use a method where all extensions ring at the same time for one inbound call. To distribute inbound calls to agents in a sophisticated manner, you must use mod_callcenter.
