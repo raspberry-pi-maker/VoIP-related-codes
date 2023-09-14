@@ -23,10 +23,10 @@ When I called the number "07070067777" using the dial plan above, I was able to 
 total 872
 drwxrws---  2 root root   4096 Sep 14 12:57 .
 drwxr-xr-x 20 root root   4096 Sep  6  2021 ..
--rw-r--r--  1 root root 219244 Sep 14 00:46 20230914004619_01058400500_myqueue.wav
--rw-r--r--  1 root root 111724 Sep 14 10:45 20230914104500_01058400500_myqueue.wav
--rw-r--r--  1 root root  87404 Sep 14 10:45 20230914104521_01058400500_myqueue.wav
--rw-r--r--  1 root root  74604 Sep 14 10:46 20230914104610_01058400500_myqueue.wav
+-rw-r--r--  1 root root 219244 Sep 14 00:46 20230914004619_01058400500_07070067777.wav
+-rw-r--r--  1 root root 111724 Sep 14 10:45 20230914104500_01058400500_07070067777.wav
+-rw-r--r--  1 root root  87404 Sep 14 10:45 20230914104521_01058400500_07070067777.wav
+-rw-r--r--  1 root root  74604 Sep 14 10:46 20230914104610_01058400500_07070067777.wav
 ```
 However, this dial plan has one drawback. That is, there is no information about the agent who answered the phone in the recording file.
 
@@ -70,9 +70,9 @@ end
 And if you test again, you can see that after_record.lua is executed as follows. You can also check agent information stored in the “cc_agent” variable. Now we can use this information to change the name of the recorded file to the format we want.
 
 ```bash
-EXECUTE [depth=0] sofia/blueivr/01058400592@1.228.34.170 lua(after_record.lua /usr/local/freeswitch/recordings/20230914131834_01058400500_07070067777.wav /usr/local/freeswitch/recordings/20230914131834_01058400500_myqueue)
+EXECUTE [depth=0] sofia/blueivr/01058400592@1.228.34.170 lua(after_record.lua /usr/local/freeswitch/recordings/20230914131834_01058400500_07070067777.wav /usr/local/freeswitch/recordings/20230914131834_01058400500_07070067777)
 2023-09-14 13:18:39.839776 [WARNING] switch_cpp.cpp:1465 ==== After Recording Process
-2023-09-14 13:18:39.839776 [WARNING] switch_cpp.cpp:1465 ==== Recording FileName:/usr/local/freeswitch/recordings/20230914131834_01058400500_myqueue
+2023-09-14 13:18:39.839776 [WARNING] switch_cpp.cpp:1465 ==== Recording FileName:/usr/local/freeswitch/recordings/20230914131834_01058400500_07070067777
 2023-09-14 13:18:39.839776 [WARNING] switch_cpp.cpp:1465 ==== Agent:1001
 ```
 <br>
@@ -83,14 +83,10 @@ Now you can create a recording file containing agent information as follows.<br>
 total 872
 drwxrws---  2 root root   4096 Sep 14 12:57 .
 drwxr-xr-x 20 root root   4096 Sep  6  2021 ..
--rw-r--r--  1 root root 219244 Sep 14 00:46 20230914004619_01058400500_myqueue.wav
--rw-r--r--  1 root root 111724 Sep 14 10:45 20230914104500_01058400500_myqueue.wav
--rw-r--r--  1 root root  87404 Sep 14 10:45 20230914104521_01058400500_myqueue.wav
--rw-r--r--  1 root root  74604 Sep 14 10:46 20230914104610_01058400500_myqueue.wav
--rw-r--r--  1 root root  73964 Sep 14 12:39 20230914123918_01058400500_myqueue_1001.wav
--rw-r--r--  1 root root  96364 Sep 14 13:11 20230914131135_01058400500_myqueue_1001.wav
--rw-r--r--  1 root root  64364 Sep 14 13:12 20230914131233_01058400500_myqueue_1001.wav
--rw-r--r--  1 root root  89644 Sep 14 13:13 20230914131337_01058400500_myqueue_1001.wav
--rw-r--r--  1 root root 108844 Sep 14 13:17 20230914131715_01058400500_myqueue_1001.wav
--rw-r--r--  1 root root  91564 Sep 14 13:18 20230914131834_01058400500_myqueue_1001.wav
+-rw-r--r--  1 root root 219244 Sep 14 00:46 20230914004619_01058400500_07070067777.wav
+-rw-r--r--  1 root root 111724 Sep 14 10:45 20230914104500_01058400500_07070067777.wav
+-rw-r--r--  1 root root  87404 Sep 14 10:45 20230914104521_01058400500_07070067777.wav
+-rw-r--r--  1 root root  74604 Sep 14 10:46 20230914104610_01058400500_07070067777.wav
+-rw-r--r--  1 root root  73964 Sep 14 12:39 20230914123918_01058400500_07070067777_1001.wav
+-rw-r--r--  1 root root  96364 Sep 14 13:11 20230914131135_01058400500_07070067777_1001.wav
 ```
