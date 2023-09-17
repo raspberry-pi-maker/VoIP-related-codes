@@ -314,7 +314,7 @@ Test with the following process.
 
 * __Restart Freeswitch.__
 * __Check if stations 1001 and 1002 are registered in Freeswitch.__
-* __Dial 300 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive calls. If successful, you can check agent login with the callcenter-config command as follows.  .__
+* __Dial 300 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive calls. If successful, you can check agent login with the callcenter-config command as follows. The status and state of extensions 1001 and 2002 must be "Available/Waiting".__
 
 
 ``` bash
@@ -339,3 +339,5 @@ name|instance_id|uuid|type|contact|status|state|max_no_answer|wrap_up_time|rejec
 Through the test, it was confirmed that call is distributed in all extension phones participating in queue "3000".
 
 Unlike mod_fifo, mod_callcenter can distribute calls to agents precisely. Therefore, it is better than mod_fifo for use in call centers.
+
+I learned very simply how to use mod_callcenter. However, we did not look at setting various option values for agents and queues and how these values work. Most of the information related to this is explained in detail in the mod_callcenter manual page introduced earlier. We will learn about the important of these options and how to add or delete agents in real time without using xml files in the next article.
