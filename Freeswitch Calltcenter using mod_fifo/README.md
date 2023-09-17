@@ -1,16 +1,16 @@
 # Freeswitch Callcenter using mod_fifo
 
-Recently, I made a call center using mod_fifo. FIFO stands for "First In, First Out". As calls enter the queue, they are arranged in order so that the call that has been in the queue for the longest time will be the first call to get answered. Generally FIFO call queues are used in "first come, first served" call scenarios such as customer service call centers.
+FIFO stands for "First In, First Out". As calls enter the queue, they are arranged in order so that the call that has been in the queue for the longest time will be the first call to get answered. Generally FIFO call queues are used in "first come, first served" call scenarios such as customer service call centers.
 
 An alternative to mod_fifo is mod_callcenter which is more of a traditional ACD application and was contributed by a member of the FreeSWITCH™ community.
 However, mod_fifo is sufficient for a simple call center implementation.
 
 The terms used in Freeswitch documentation are slightly different from terms used in general call centers. There are some parts that can be a little confusing, but I will try to use the terms used in general call centers as much as possible.
 
-I will create a test environment for call center implementation as follows.
+I will create a test environment for call system implementation as follows.
 For reference, there is no agent concept in mod_fifo. The service is implemented using only the extension phone number.<br/><br/>
 
-## Test Environment
+# Test Environment
 <br>
 I prepared the following for testing.
 Two telephones (1001 and 1002) to be used by agents receiving inbound calls are connected to Freeswitch as extensions. And a separate phone was prepared to serve as a customer. This phone needs to be able to connect to another exchange or make calls to freeswitch directly over a sip trunk. I used the latter.<br/><br/>
@@ -20,7 +20,7 @@ Two telephones (1001 and 1002) to be used by agents receiving inbound calls are 
 
 <br/><br/>
 
-## extension settings
+# extension settings
 <br>
 For extension configuration, add the following two files to the conf/directory/default directory.
 The file names were 1001.xml and 1002.xml.<br/><br/>
@@ -42,7 +42,6 @@ The file names were 1001.xml and 1002.xml.<br/><br/>
       <variable name="effective_caller_id_number" value="1001"/>
       <variable name="outbound_caller_id_name" value="$${outbound_caller_name}"/>
       <variable name="outbound_caller_id_number" value="$${outbound_caller_id}"/>
-      <variable name="callgroup" value="techsupport"/>
     </variables>
   </user>
 </include>
@@ -64,7 +63,6 @@ The file names were 1001.xml and 1002.xml.<br/><br/>
       <variable name="effective_caller_id_number" value="1002"/>
       <variable name="outbound_caller_id_name" value="$${outbound_caller_name}"/>
       <variable name="outbound_caller_id_number" value="$${outbound_caller_id}"/>
-      <variable name="callgroup" value="techsupport"/>
     </variables>
   </user>
 </include>
@@ -92,7 +90,7 @@ reg_user,realm,token,url,expires,network_ip,network_port,network_proto,hostname,
 
 
 
-## External Phone
+# External Phone
 <br><br>
 
 My favorite softphone for trunk call testing is the PhonerLite. 
@@ -106,14 +104,33 @@ Do not enter server information as shown in the picture and do not check Registe
 <br/><br/>
 
 
-## Freeswitch Settings
+# Freeswitch Settings
 <br><br>
 
 Now for the most important Freeswitch settings. Since the extension setting has been done in advance, set the dialplan first.
 
 <br/><br/>
 
-### __Trunk Call Dialplan__
+## FIFO module load
+
+<br>
+
+First, modify the conf/auto_loads/modules.conf.xml file to load mod_fifo when Freeswitch starts. If xml is commented out, uncomment it.
+
+``` xml
+<configuration name="modules.conf" description="Modules">
+  <modules>
+  
+    ......
+
+    <!-- BluebayNetworks -->
+    <load module="mod_fifo"/>
+  </modules>
+</configuration>
+```
+<br>
+
+## __Trunk Call Dialplan__
 
 <br>
 
@@ -215,7 +232,7 @@ Calls to 2000 or 2001 are placed in a FIFO queue that works as follows:
 
 <br/><br/>
 
-### __Extension Dialplan__
+## __Extension Dialplan__
 
 <br>
 
@@ -286,7 +303,7 @@ When an agent dials 6#X from extension numbers 1001 and 1002, the following proc
 
 <br/><br/>
 
-### __fifo.conf.xml__
+## __fifo.conf.xml__
 <br/><br/>
 
 The two most important tasks remain. First, open the fifo.conf.xml file and create the FIFO queue name "fifoqueue" used in dialplan.
@@ -311,23 +328,9 @@ The two most important tasks remain. First, open the fifo.conf.xml file and crea
 ```
 <br/><br/>
 
-And open the modules.conf.xml file to check whether mod_fifo is used or not. If mod_fifo is commented out or not visible, add it.<br/><br/>
 
 
-``` xml
-<configuration name="modules.conf" description="Modules">
-  <modules>
-  
-    ......
-
-    <!-- BluebayNetworks -->
-    <load module="mod_fifo"/>
-  </modules>
-</configuration>
-```
-<br/><br/>
-
-## Test 
+# Test 
 <br>
 Test with the following process.
 <br/><br/>
@@ -346,6 +349,5 @@ Test with the following process.
 <br/><br/>
 
 # Wrapping up
-Through the test, it was confirmed that call is distributed in all extension phones participating in FIFO.
 In fact, an important part of FIFO is to make several calls at the same time and check whether they are connected to the agent in order.
 However, a typical call center does not use a method where all extensions ring at the same time for one inbound call. To distribute inbound calls to agents in a sophisticated manner, you must use mod_callcenter.
