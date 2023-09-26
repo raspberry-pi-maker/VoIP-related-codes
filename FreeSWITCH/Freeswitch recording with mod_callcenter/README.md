@@ -97,7 +97,7 @@ drwxr-xr-x 20 root root   4096 Sep  6  2021 ..
 # Recording File Length Customizing
 
 The recording file starts from the moment the caller calls FreeSWITCH. Therefore, not only the content of the call with the agent, but also the announcement from the IVR at the time of initial connection and the announcement from the call center queue are all recorded. Although this type of recording file is useful in some cases, it increases the size of the recording file unnecessarily, so in most cases, you only want to record the conversation with the agent. Through post-processing, the content of the call with the agent can be extracted and saved from the recording file.
-
+This can also be done in the after_record.lua file set in the record_post_process_exec_app variable.
 
 Let's modify the lua file created earlier to save only the content of the call with the agent.
 
