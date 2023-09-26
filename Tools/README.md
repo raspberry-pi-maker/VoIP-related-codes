@@ -1,9 +1,9 @@
 # pcap Documents
 
 
-* [remove silent section from wav file](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/pcap/pcap%20file%20Analyzing). 
+* [remove silent section from wav file](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/Tools/remove%20silent%20section%20from%20wav%20file). 
 
-* [sngrep - Wireshark alternative](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/pcap/pcap%20samples). 
+* [sngrep - Wireshark alternative](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/Tools/sngrep%20-%20Wireshark%20alternative). 
 
 
 
