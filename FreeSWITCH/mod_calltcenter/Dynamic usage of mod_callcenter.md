@@ -73,9 +73,9 @@ Enter the property value corresponding to the key as the value value.
 |status|Logged Out, Available, Available (On Demand), On Break|When you first log in, you start at status (Available) and state (Waiting).|
 |state|Idle, Waiting, Receiving, In a queue call|Unless there are special cases, these values do not need to be changed. mod_callcenter maintains the appropriate state value.|
 |type|callaback, uuid-standby|callback will try to reach the agent via the contact fields value. uuid-standby will try to bridge the call directly using the agent uuid. It is okay to use the callback type.|
-|max_no_answer|seconds|agent fails to answer in thistime, then the agent's Status will changed to 'On Break'.|
-|wrap_up_time|seconds|Waiting time to return to Available/Waiting after the consultation call ends. Generally, it is used to allow time needed for post-processing work.|
-|ready_time|테스트2|테스트3|
+|max_no_answer|seconds|agent fails to answer in this time, then the agent's Status will changed to 'On Break'.|
+|wrap_up_time|seconds|Waiting time to return to Available/Waiting after the inbound call from queue ends. Generally, it is used to allow time needed for post-processing work.|
+|ready_time|epoch time|Indicates the time to receive a call again through the queue when the agent gives up. The causes of the abandon call are the Busy case, which occurs when the DND (Do Not Disturb) button is pressed, and the Reject case, which occurs when the Reject button is pressed. Since the actual Reject button is often replaced with the DND button, these two cases can be considered the same. Therefore, the following equation holds. __ready_time = Current time (when the give-up signal occurs) + busy_delay_time (or reject_delay_time )__. Since this value is managed by mod_callcenter, it is not modified unless in special cases. |
 |reject_delay_time|seconds|If the agent presses the reject button on her phone, wait this defined time amount.|
 |busy_delay_time|seconds|If the agent is on Do Not Disturb, wait this defined time before trying him again.|
 
@@ -296,3 +296,10 @@ name|instance_id|uuid|type|contact|status|state|max_no_answer|wrap_up_time|rejec
 ```
 
 The call will be routed to the 1001 extension that the 1001 agent is using.
+
+<br>
+For reference, when logging out, surround Logged Out with single quotes.
+```bash
+freeswitch@blueivr> callcenter_config agent set status 1001 'Logged Out'
++OK
+```
