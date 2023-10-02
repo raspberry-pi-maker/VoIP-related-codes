@@ -1,7 +1,7 @@
 # Check Queue Status
 
 ## __Prerequisite__
-* [__How to use mod_callcenter__]((https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/Freeswitch%20mod_calltcenter/How%20to%20use%20mod_callcenter.md)
+* [__How to use mod_callcenter__](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/Freeswitch%20mod_calltcenter/How%20to%20use%20mod_callcenter.md)
 * [__Dynamic usage of mod_callcenter__](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/Freeswitch%20mod_calltcenter/Dynamic%20usage%20of%20mod_callcenter.md)
 * [__Under the hood of mod_callcenter__](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/Freeswitch%20mod_calltcenter/Dynamic%20usage%20of%20mod_callcenter.md)
 
