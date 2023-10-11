@@ -392,7 +392,6 @@ root@ubuntusrv:/usr/local/freeswitch/db# sqlite3 my_cdr.db
 SQLite version 3.31.1 2020-01-27 19:55:54
 Enter ".help" for usage hints.
 sqlite> select * from cdr;
-sqlite> select * from cdr;
 91342657|*1003|1001|2023-10-10 23:43:58|2023-10-10 23:43:59|2023-10-10 23:44:06|8|7|NORMAL_CLEARING|99205d8f-5ec4-402e-b174-7a8bb8c23a61|02132a5c-b9b1-4dbf-b79c-bdf408854867
 1001|1002|1002|2023-10-10 23:44:11|2023-10-10 23:44:13|2023-10-10 23:44:19|8|6|NORMAL_CLEARING|a03307a6-3658-4dde-a25b-bb6aecb96945|515f34c7-35d4-4b65-99f2-edaad9411fa7
 
