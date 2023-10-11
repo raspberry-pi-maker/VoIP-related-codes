@@ -7,6 +7,7 @@
 ## CDR(Call Detail Records)
 
 * [CDR basic - mod_cdr_csv](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/cdr/cdr_basic.md). 
+* [mod_odbc_cdr](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/cdr/cdr_odbc.md). 
 
 ## CallCenter
 
