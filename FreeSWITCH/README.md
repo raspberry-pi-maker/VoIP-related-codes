@@ -1,5 +1,13 @@
 # Freeswitch Related Documents
 
+## Basic concepts
+
+* [profile, context, extension, leg, channel variable](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/basic_concept.md). 
+
+## CDR(Call Detail Records)
+
+* [CDR basic - mod_cdr_csv](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/cdr/cdr_basic.md). 
+
 ## CallCenter
 
 * [Using mod_callcenter](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/mod_calltcenter/How%20to%20use%20mod_callcenter.md). 
