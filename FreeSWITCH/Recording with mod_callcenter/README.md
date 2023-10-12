@@ -40,7 +40,7 @@ I will use "record_post_process_exec_app".
         <action application="sched_hangup" data="+300 alloted_timeout"/>
         <action application="spandsp_start_dtmf" data=""/>
         
-        <action application="set" data="cc_recordfile=$${base_dir}/recordings/${strftime(%Y%m%d%H%M%S)}_${caller_id_number}_${destination_number}")
+        <action application="set" data="cc_recordfile=$${base_dir}/recordings/${strftime(%Y%m%d%H%M%S)}_${caller_id_number}_${destination_number}" />
 
         <action application="log" data="WARNING RecordFile"/>
         <action application="log" data="WARNING RecordFile=${cc_recordfile}"/>
@@ -54,18 +54,20 @@ A Lua script that can be executed after recording is added to the dial plan. Now
 
 ```lua
 -- callcenter_test.lua
-    queue = session:getVariable("destination_number")
+fs_api = freeswitch.API();
+queue = session:getVariable("destination_number")
+dtNow = fs_api:execute("strftime", "%Y%m%d%H%M%S")
 
-    local record_file_no_ext = "$${base_dir}/recordings/" ..dtNow .."_" ..queue .."_" ..queue
-    local record_file = "$${base_dir}/recordings/" ..dtNow .."_" ..queue .."_" ..queue ..".wav"
-    ScenarioLog("INFO", "Test Call center Scenario Start Queue:" ..queue .."\n")
-    session:execute("set", "caller_id_name=" ..queue)
-    session:execute("set", "recording_follow_transfer=true")
-    --session:execute("set", "cc_export_recordfilename="..record_file)
-    session:execute("set", "record_post_process_exec_app=lua:after_record.lua " ..record_file .. " " ..record_file_no_ext)
-    session:execute("record_session", record_file)
-    session:execute("callcenter", queue .."@default")
-    return
+local record_file_no_ext = "$${base_dir}/recordings/" ..dtNow .."_" ..queue .."_" ..queue
+local record_file = "$${base_dir}/recordings/" ..dtNow .."_" ..queue .."_" ..queue ..".wav"
+ScenarioLog("INFO", "Test Call center Scenario Start Queue:" ..queue .."\n")
+session:execute("set", "caller_id_name=" ..queue)
+session:execute("set", "recording_follow_transfer=true")
+--session:execute("set", "cc_export_recordfilename="..record_file)
+session:execute("set", "record_post_process_exec_app=lua:after_record.lua " ..record_file .. " " ..record_file_no_ext)
+session:execute("record_session", record_file)
+session:execute("callcenter", queue .."@default")
+return
 
 ```
 
@@ -142,7 +144,9 @@ end
 And this is python program which extracts only agent's part of wav file.
 
 ```python
+#split_wav.py
 #This python program extracts only agent's part of recording from wav file.
+
 import wave
 import argparse
 

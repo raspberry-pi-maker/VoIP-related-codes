@@ -183,6 +183,7 @@ This picture is the first trunk phone call.
 
 
 ```bash
+root@ubuntusrv:/usr/local/freeswitch/log/cdr-csv# cat Master.csv
 "spypi","91342657","1001","blueivr","2023-10-10 23:43:58","2023-10-10 23:43:59","2023-10-10 23:44:06","8","7","NORMAL_CLEARING","02132a5c-b9b1-4dbf-b79c-bdf408854867","","1001","PCMU","PCMU"
 "spypi","91342657","*1003","blueivr","2023-10-10 23:43:58","2023-10-10 23:43:59","2023-10-10 23:44:06","8","7","NORMAL_CLEARING","99205d8f-5ec4-402e-b174-7a8bb8c23a61","02132a5c-b9b1-4dbf-b79c-bdf408854867","","PCMU","PCMU"
 "Extension 1001","1001","1002","default","2023-10-10 23:44:11","2023-10-10 23:44:13","2023-10-10 23:44:19","8","6","NORMAL_CLEARING","515f34c7-35d4-4b65-99f2-edaad9411fa7","","1002","PCMA","PCMA"
@@ -242,7 +243,7 @@ And the cdr_csv.conf.xml's template name is example.
 import subprocess
 import csv
 import sqlite3
-import time, os
+import time, os, glob
 
 def send_signal():
     # process call and get output
@@ -332,10 +333,10 @@ backup_dir = '/usr/local/freeswitch/log/cdr-csv-back'
 if not os.path.exists(backup_dir):
     os.mkdir(backup_dir) 
 
-file_list = os.listdir(path_dir)
+glob_dir = '/usr/local/freeswitch/log/cdr-csv/Master.csv.*'
+
+file_list = list(glob.glob(glob_dir))
 for file in file_list:
-    if file.endswith(".csv"): continue  # This is not backup
-    if file.find("Master") == -1: continue  # This is not backup
     filename = path_dir + '/' + file
     f = open(filename, 'r', encoding='utf-8')
     if not f:

@@ -271,6 +271,6 @@ If you look at the MySQL table after the call is completed, you can see that the
 
 # Wrapping up
 Using mod_odbc_cdr, you can easily save CDRs to a relational database. However, the cdr column value in the above example using the xml value in the FreeSWITCH official document feels poor.
-Column values can be changed using channel variable values as described in mod_cdr_csv. You can create it in whatever format you want.
+__Column values can be changed using channel variable values as described in mod_cdr_csv.__ You can create it in whatever format you want.
 However, combining the A Leg and B Leg described in mod_cdr_csv into one row is not easy in [__mod_odbc_cdr__](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/cdr/cdr_basic.md).
 

@@ -233,9 +233,6 @@ freeswitch@blueivr> callcenter_config agent set busy_delay_time 1001 60
 +OK
 
 2023-09-26 00:44:00.924977 [DEBUG] mod_callcenter.c:1180 Updated Agent 1001 set busy_delay_time = 60
-freeswitch@blueivr> callcenter_config agent set no
-
-[no_answer_delay_time]	
 
 
 freeswitch@blueivr> callcenter_config agent set no_answer_delay_time 1001 10
@@ -243,7 +240,7 @@ freeswitch@blueivr> callcenter_config agent set no_answer_delay_time 1001 10
 
 2023-09-26 00:44:10.645067 [DEBUG] mod_callcenter.c:1180 Updated Agent 1001 set no_answer_delay_time = 10
 
-freeswitch@blueivr> callcenter_config agent set contact 1001  "[call_timeout=60]user/1001"
+freeswitch@blueivr> callcenter_config agent set contact 1001  '[call_timeout=60]user/1001'
 +OK
 
 2023-09-26 00:49:05.784430 [DEBUG] mod_callcenter.c:1180 Updated Agent 1001 set contact = "[call_timeout=60]user/1001"
@@ -299,6 +296,7 @@ The call will be routed to the 1001 extension that the 1001 agent is using.
 
 <br>
 For reference, when logging out, surround Logged Out with single quotes.
+
 ```bash
 freeswitch@blueivr> callcenter_config agent set status 1001 'Logged Out'
 +OK
