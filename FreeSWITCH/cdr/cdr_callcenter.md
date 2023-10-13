@@ -166,14 +166,13 @@ The flow of analyzing ESL events is as follows.
 ## Sample python script for ESL, CDR
 
 The following Python script receives the CUSTOM ESL event and leaves a CDR in the sqlite DB.
-It is easy to create statistics because it adds information such as agent name and queue name.
+It is easy to create statistics because it adds information such as agent name and queue name to the cdr records.
 
 <br>
 
 ```python
 import ESL
 import json
-import datetime
 import sqlite3
 
 filter = 'CUSTOM callcenter::info'
