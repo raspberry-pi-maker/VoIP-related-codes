@@ -119,7 +119,18 @@ make
 make install
 ```
 
-<br>
+
+<br><br>
+
+### Additional work
+
+* Modify the domain IP and codec information to be used in the vars.xml file.
+* If an extension is needed, create an extension information xml file in conf/directory.
+* Create the necessary dialplan in conf/dialplan.
+* If a sip connection is required, perform additional work in conf/sip_profiles.
+
+<br><br>
+
 And this is the structure of the /usr/local/freeswitch directory confirmed with the tree command.
 
 
@@ -631,14 +642,6 @@ $ tree /usr/local/freeswitch/
     └── http_file_cache
 ```
 
-<br><br>
-
-### Additional work
-
-* Modify the domain IP and codec information to be used in the vars.xml file.
-* If an extension is needed, create an extension information xml file in conf/directory.
-* Create the necessary dialplan in conf/dialplan.
-* If a sip connection is required, perform additional work in conf/sip_profiles.
 
 
 
