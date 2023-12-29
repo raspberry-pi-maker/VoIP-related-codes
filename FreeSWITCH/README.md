@@ -1,9 +1,14 @@
 # Freeswitch Related Documents
 
+## Build
+
+* [Debian 12](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/build/debian_build.md). 
+
+<br>
+
 ## Basic concepts
 
 * [profile, context, extension, leg, channel variable](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/basic_concept.md). 
-
 
 <br>
 
