@@ -9,7 +9,7 @@ I downloaded debian-12.4.0-amd64-netinst.iso from the debian site and installed 
 I will omit the detailed process related to Debian OS installation. The following are the settings required after installation.
 <br>
 
-### Network COnfiguration
+### Network Configuration
 <br>
 After installing Debian, change the network from DHCP to STATIC IP as follows. Change the IP address and gateway information to suit your situation.
 
