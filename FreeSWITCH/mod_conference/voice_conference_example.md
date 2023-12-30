@@ -188,6 +188,28 @@ And if you press 0 after entering the conference room, the status will change to
 <br><br>
 
 
+# Very Simple Voice Conference Examples using lua script
+
+This time I will implement above dialplan in lua.
+
+<br>
+
+
+
+```xml
+    <extension name="SIMPLE_CONFERENCE2">
+        <condition field="destination_number" expression="^(2002)$">
+            <action application="log" data="ALERT ==== Simple Conference2 CALL From ${caller_id_number}======"/>
+	    <action application="set" data="continue_on_fail=true"/>
+            <action application="lua" data="simple_conference.lua"/>
+        </condition>
+    </extension>
+```
+
+
+<br><br>
+
+
 
 # Wrapping up
 I created a very simple conference room and learned the basic operations. Generally, a conference is based on the participation of three or more people. In the next example, I will create a conference example with a slightly more elaborate scenario.
