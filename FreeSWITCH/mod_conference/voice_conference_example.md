@@ -224,7 +224,7 @@ This is the simple_conference.lua. Using a lua script, the PIN value can be dyna
 ani = session:getVariable("ani")
 dnis = session:getVariable("destination_number") 
 
-freeswitch.consoleLog("NOTICE", "Conference Call from [%s] to [%s]\n", ani, dnis)
+freeswitch.consoleLog("NOTICE", string.format("Conference Call from [%s] to [%s]\n", ani, dnis))
 session:execute("ring_ready")
 session:sleep(500) 
 session:answer()
