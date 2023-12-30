@@ -162,7 +162,18 @@ Adding these features is very simple. All you have to do is add a little somethi
 <br>
 `+7536+flags{mute}`  was added after the conference name. Just add the PIN value after the first + and the flags value after the second +.
 
+If you want to add two or more flags, do the following:
+
+```xml
+<action application="conference" data="confname[@profile][+flags{mute|deaf|...}]">
+```
+<br>
+The types of flag values are well explained at https://developer.signalwire.com/freeswitch/FreeSWITCH-Explained/Modules/mod_conference_3965534/.
+
+<br>
 The voice file related to PIN processing has already been added to the conference.conf.xml file. Now, when you call number 2001, you will hear a voice asking you to enter the PIN value. If you enter the correct PIN value, you can enter the conference room. If you enter the wrong PIN value, you can retry 3 times. The number of retries is defined as follows.
+
+<br>
 
 ```xml
 <param name="pin-retries" value="3"/>
