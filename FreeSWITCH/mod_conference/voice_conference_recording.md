@@ -66,7 +66,7 @@ Recording conference content is very simple. Just add “auto-record” to the p
 ```
 <br>
 
-## conference.conf.xml
+## dialplan
 
 ```xml
     <extension name="SIMPLE_CONFERENCE2">
