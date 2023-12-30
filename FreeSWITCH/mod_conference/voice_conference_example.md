@@ -171,6 +171,9 @@ The voice file related to PIN processing has already been added to the conferenc
 
 The default value is 3, so there is no need to add it if you use the default value of 3.
 
+And if you press 0 after entering the conference room, the status will change to mute or unmute and the audio files (conf-muted.wav, conf-unmuted.wav) will be played.
+
+
 <br><br>
 
 
