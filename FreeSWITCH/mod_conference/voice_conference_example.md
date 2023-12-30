@@ -1,6 +1,16 @@
-# Very Simple Voice Conference Examples
+# Very Simple Voice Conference Example
 
 __This document is applicable to FreeSWITCH 1.6 or higher. We recommend using 1.10 if possible.__
+
+<br>
+
+## Prerequisites
+
+<br>
+
+* [mod_conference](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/mod_conference.md). 
+
+<br>
 
 ## Pre-prepared sound files
 <br>
@@ -136,7 +146,7 @@ The following are FreeSWITCH settings created for this scenario.
 <br><br>
 
 
-# Very Simple Voice Conference Examples2
+# Very Simple Voice Conference Example2
 
 This time I will add only a few features.
 
@@ -188,13 +198,13 @@ And if you press 0 after entering the conference room, the status will change to
 <br><br>
 
 
-# Very Simple Voice Conference Examples using lua script
+# Very Simple Voice Conference Example2 using lua script
 
 This time I will implement above dialplan in lua.
 
 <br>
 
-
+In dialplan, simply call simple_conference.lua.
 
 ```xml
     <extension name="SIMPLE_CONFERENCE2">
@@ -206,6 +216,26 @@ This time I will implement above dialplan in lua.
     </extension>
 ```
 
+<br>
+
+This is the simple_conference.lua. Using a lua script, the PIN value can be dynamically read from the database, and the conference room can also be dynamically selected, allowing for a much more flexible conference implementation.
+
+```lua
+ani = session:getVariable("ani")
+dnis = session:getVariable("destination_number") 
+
+freeswitch.consoleLog("NOTICE", "Conference Call from [%s] to [%s]\n", ani, dnis)
+session:execute("ring_ready")
+session:sleep(500) 
+session:answer()
+
+--test@simpleconf+7536+flags{mute}
+conf_num = "test"
+conf_profile = "simpleconf"
+pin = "7536"
+flags = "mute"
+session:execute("conference", string.format("%s@%s+%s+flags{%s}", conf_num, conf_profile, pin, flags))
+```
 
 <br><br>
 
