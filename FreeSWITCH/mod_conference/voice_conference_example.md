@@ -135,5 +135,45 @@ The following are FreeSWITCH settings created for this scenario.
 ```
 <br><br>
 
+
+# Very Simple Voice Conference Examples2
+
+This time I will add only a few features.
+
+* __Secure conference using PIN input__
+* __Activate mute functionality__
+
+<br>
+
+Adding these features is very simple. All you have to do is add a little something to your dialplan, like this:
+
+<br>
+
+```xml
+    <extension name="SIMPLE_CONFERENCE2">
+        <condition field="destination_number" expression="^(2001)$">
+            <action application="log" data="ALERT ==== Simple Conference2 CALL From ${caller_id_number}======"/>
+	    <action application="set" data="continue_on_fail=true"/>
+            <!--<action application="answer"/>-->
+            <action application="conference" data="test@simpleconf+7536+flags{mute}"/>
+        </condition>
+    </extension>
+```
+<br>
+`+7536+flags{mute}`  was added after the conference name. Just add the PIN value after the first + and the flags value after the second +.
+
+The voice file related to PIN processing has already been added to the conference.conf.xml file. Now, when you call number 2001, you will hear a voice asking you to enter the PIN value. If you enter the correct PIN value, you can enter the conference room. If you enter the wrong PIN value, you can retry 3 times. The number of retries is defined as follows.
+
+```xml
+<param name="pin-retries" value="3"/>
+```
+<br>
+
+The default value is 3, so there is no need to add it if you use the default value of 3.
+
+<br><br>
+
+
+
 # Wrapping up
 I created a very simple conference room and learned the basic operations. Generally, a conference is based on the participation of three or more people. In the next example, I will create a conference example with a slightly more elaborate scenario.
