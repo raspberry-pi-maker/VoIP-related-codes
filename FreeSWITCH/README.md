@@ -56,6 +56,13 @@
 
 * [Simple Video Call](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/Video%20Call/SimpleVideo.md). 
 
+<br>
+
+
+## Conference
+
+* [mod_conference](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/mod_conference.md). 
+* [Very Simple Voice Conference Examples](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/voice_conference_example.md). 
 
 <br>
 

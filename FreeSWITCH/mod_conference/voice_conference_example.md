@@ -1,0 +1,139 @@
+# Very Simple Voice Conference Examples
+
+__This document is applicable to FreeSWITCH 1.6 or higher. We recommend using 1.10 if possible.__
+
+## Pre-prepared sound files
+<br>
+The following files are audio files to be used for conference testing. Create and prepare these audio files with appropriate content in advance and save them in the /usr/local/freeswitch/sounds/conference .
+
+<br>
+
+|File Name|Description|Position in concerence.conf.xml|
+|------|---|---|
+|conf-alone.wav|File to play if you are alone in the conference|`<param name="alone-sound" value="conference/conf-alone.wav"/>`|
+|conf-exit.wav|File to play when you leave the conference. |`<param name="exit-sound" value="conference/conf-exit.wav"/>`|
+|conf-music.wav|File to play when you're alone|`<param name="moh-sound" value="conference/conf-music.wav"/>`|
+|conf-muted.wav|File to play to acknowledge muted|`<param name="muted-sound" value="conference/conf-muted.wav"/>`|
+|conf-unmuted.wav|File to play to acknowledge unmuted|`<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>`|
+|conf-pin.wav|File to play to prompt for a pin|`<param name="pin-sound" value="conference/conf-pin.wav"/>`|
+|conf-bad-pin.wav|File to play to when the pin is invalid|`<param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>`|
+|conf-welcome.wav|File to play when you join the conference. No play for first participant|`<param name="enter-sound" value="conference/conf-welcome.wav"/>`|
+|conf-kicked.wav|File to play when you are ejected from the conference|`<param name="kicked-sound" value="conference/conf-kicked.wav"/>`|
+||||
+
+<br>
+
+## Simple Conference Scenario
+<br>
+Below is a flowchart of the simple conference room I am trying to create. 
+
+Only two devices will participate in the conference. 
+* If the first extension 1001 dials 2000, FreeSWITCH will create a conference room and invite 1001 to join the conference room. Since 1001 is the first participant, 1001 will hear an announcement (alone-sound) informing 1001 that 1001 are currently alone. Then, 1001 will hear the waiting music repeatedly until the next participant enters.
+
+* When the second participant 1002 calls number 2000, he or she will hear an enter-sound indicating participation in the conference room. And since two people participated in the conference room, the conference room is activated and the two participants can have a meeting. And the waiting music that 1001 was listening to will also end.
+
+* when the meeting is over, 1001 ends the call first and leaves. Then, since 1002 will be left alone, you will hear a message (alone-sound) informing you that you are alone. Then, you will hear the waiting music repeatedly until the next participant enters. In this state, when 1002 ends the call, the conference room also disappears.
+
+<br>
+
+![flow](./image/1.png)
+
+
+<br>
+
+## Configuration
+<br>
+The following are FreeSWITCH settings created for this scenario.
+
+<br>
+
+### conf/autoload_configs/conference.conf.xml
+
+```xml
+    <profile name="simpleconf">
+      <!-- Domain (for presence) -->
+      <param name="domain" value="$${domain}"/>
+      <!-- Sample Rate-->
+      <param name="rate" value="8000"/>
+      <!-- Number of milliseconds per frame -->
+      <param name="interval" value="20"/>
+      <!-- Energy level required for audio to be sent to the other users -->
+      <param name="energy-level" value="100"/>
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <!-- File to play to acknowledge unmuted -->
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <!-- File to play if you are alone in the conference -->
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <!-- File to play when you're alone (music on hold)-->
+      <param name="moh-sound" value="conference/conf-music.wav"/>
+      <!-- File to play when you join the conference -->
+      <param name="enter-sound" value="conference/conf-welcome.wav"/>
+      <!-- File to play when you leave the conference -->
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <!-- File to play when you are ejected from the conference -->
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <!-- File to play to prompt for a pin -->
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <!-- File to play to when the pin is invalid -->
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <!-- Default Caller ID Number for outbound calls -->
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="true"/>
+    </profile>
+```
+
+<br>
+
+### conf/dialplan/default.xml
+
+```xml
+    <extension name="SIMPLE_CONFERENCE">
+        <condition field="destination_number" expression="^(2000)$">
+            <action application="log" data="ALERT ==== Simple Conference CALL From ${caller_id_number}======"/>
+            <action application="set" data="continue_on_fail=true"/>
+            <!--<action application="answer"/>-->
+            <action application="conference" data="test@simpleconf"/>
+        </condition>
+    </extension>
+```
+
+
+<br>
+
+### conf/directory/default/station.xml
+
+```xml
+<include>
+  <user id="1001">
+    <params>
+      <param name="password" value="$${default_password}"/>
+    </params>
+    <variables>
+      <variable name="accountcode" value="1001"/>
+      <variable name="user_context" value="default"/>
+      <variable name="effective_caller_id_name" value="Extension 1001"/>
+      <variable name="effective_caller_id_number" value="1001"/>
+      <variable name="outbound_caller_id_name" value="$${outbound_caller_name}"/>
+      <variable name="outbound_caller_id_number" value="$${outbound_caller_id}"/>
+    </variables>
+  </user>
+  <user id="1002">
+    <params>
+      <param name="password" value="$${default_password}"/>
+    </params>
+    <variables>
+      <variable name="accountcode" value="1002"/>
+      <variable name="user_context" value="default"/>
+      <variable name="effective_caller_id_name" value="Extension 1002"/>
+      <variable name="effective_caller_id_number" value="1001"/>
+      <variable name="outbound_caller_id_name" value="$${outbound_caller_name}"/>
+      <variable name="outbound_caller_id_number" value="$${outbound_caller_id}"/>
+    </variables>
+  </user>
+</include>
+```
+<br><br>
+
+# Wrapping up
+I created a very simple conference room and learned the basic operations. Generally, a conference is based on the participation of three or more people. In the next example, I will create a conference example with a slightly more elaborate scenario.
