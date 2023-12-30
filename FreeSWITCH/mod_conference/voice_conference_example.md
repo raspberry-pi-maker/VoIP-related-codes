@@ -20,8 +20,8 @@ The following files are audio files to be used for conference testing. Create an
 
 |File Name|Description|Position in concerence.conf.xml|
 |------|---|---|
-|conf-alone.wav|File to play if you are alone in the conference|`<param name="alone-sound" value="conference/conf-alone.wav"/>`|
-|conf-exit.wav|File to play when you leave the conference. |`<param name="exit-sound" value="conference/conf-exit.wav"/>`|
+|conf-alone.wav|File to play if you are alone in the conference. This file is heard by all participants in the conference room.|`<param name="alone-sound" value="conference/conf-alone.wav"/>`|
+|conf-exit.wav|File to play when you leave the conference. This file is heard by all participants in the conference room except the devic that ended the call. |`<param name="exit-sound" value="conference/conf-exit.wav"/>`|
 |conf-music.wav|File to play when you're alone|`<param name="moh-sound" value="conference/conf-music.wav"/>`|
 |conf-muted.wav|File to play to acknowledge muted|`<param name="muted-sound" value="conference/conf-muted.wav"/>`|
 |conf-unmuted.wav|File to play to acknowledge unmuted|`<param name="unmuted-sound" value="conference/conf-unmuted.wav"/>`|
