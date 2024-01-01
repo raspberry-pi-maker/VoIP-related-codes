@@ -16,8 +16,8 @@ __This document is applicable to FreeSWITCH 1.6 or higher. We recommend using 1.
 
 <br>
 
-The process from initially creating a conference room to having two conference attendees participate in the meeting is the same as [Voice Conference with Inviting Example](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/voice_conference_invite.md).
-However, in this scenario, two meeting attendees invite another attendee during the conference.
+The process from initially creating a conference room to having two conference attendees participate in the conference is the same as [Voice Conference with Inviting Example](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/voice_conference_invite.md).
+However, in this scenario, two conference attendees invite another attendee during the conference.
 
 <br>
 
@@ -146,7 +146,7 @@ prefix_string = prefix_string .. "}"
 freeswitch.consoleLog("WARNING", "prifix_string:" .. prefix_string .. "\n")
 session:execute("set", "conference_auto_outcall_prefix=" .. prefix_string)
 
--- Invite station to the conference room "user/1005@$${domain}"
+-- Invite station to the conference room "user/1004@$${domain}"
 session:execute("conference_set_auto_outcall", "user/" .. conf_name .."@$${domain}")
 
 -- Put the (trunk) caller in the conference room
@@ -188,7 +188,7 @@ I will use bind_digit_action to invite additional attendees from the extension p
 
 <br>
 
-The core function of this script is to use bind_digit_action to execute dial plans ASK_FOR_NUMBER__1004 and CANCEL_LAST_CALL__1004 when *1 and *2 are pressed during a meeting.
+The core function of this script is to use bind_digit_action to execute dial plans ASK_FOR_NUMBER__1004 and CANCEL_LAST_CALL__1004 when *1 and *2 are pressed during a conference.
 
 <br>
 
@@ -281,10 +281,10 @@ Let’s test in the following order.
 
 1. Make a call to sip:2002@domain:5080 from an external phone.
 2. FreeSWITCH runs "complex_voice_trunk_conference.lua" in the FreeSWITCH external dialplan.
-3. "complex_voice_trunk_conference.lua" invites extension 1005 to the conference room. At this time, register a callback that is automatically executed when the extension answers a call in prefix_string.
-4. Extension 1005 answers the call and enters the conference room.
-5. During a conference, extension 1005 presses *1 to start inviting new conference member.
-6. FreeSWITCH asks 1005 to enter the phone number of the person you want to invite.
+3. "complex_voice_trunk_conference.lua" invites extension 1004 to the conference room. At this time, register a callback that is automatically executed when the extension answers a call in prefix_string.
+4. Extension 1004 answers the call and enters the conference room.
+5. During a conference, extension 1004 presses *1 to start inviting new conference member.
+6. FreeSWITCH asks 1004 to enter the phone number of the person you want to invite.
 7. FreeSWITCH invites new conference member.
 8. Three people do a meeting in a conference room.
 
