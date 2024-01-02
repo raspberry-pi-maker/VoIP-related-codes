@@ -331,7 +331,7 @@ The print_add_member function, which handles the "add-member" event that is call
 function print_add_member()
     action = event:getHeader("action")
     conf_name = event:getHeader("Conference-Name")
-	conf_member_id = event:getHeader("Member-ID")
+    conf_member_id = event:getHeader("Member-ID")
     profile = event:getHeader("Conference-Profile-Name")
     size = event:getHeader("Conference-Size")
     ani = event:getHeader("Caller-Caller-ID-Number")
