@@ -338,11 +338,11 @@ function print_add_member()
     dnis = event:getHeader("Caller-Destination-Number")
     direction = event:getHeader("Caller-Direction")
     conference = conf_name .."@" ..profile
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")
 
-	conf_cmd = conf_name .. " list count"
+    conf_cmd = conf_name .. " list count"
     count = fs_api:execute("conference", conf_cmd)
-	freeswitch.consoleLog("WARNING",  "Current conference attendee count:" .. count .. "\n")
+    freeswitch.consoleLog("WARNING",  "Current conference attendee count:" .. count .. "\n")
     
 end
 ```
