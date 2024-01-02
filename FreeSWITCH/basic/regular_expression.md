@@ -59,7 +59,6 @@ For example, the dialplan below works when the called number is a digit in the 3
 | 1001 ~ 1005 or 5001 ~ 5005 | ^([15]00[12345])$ |
 | Any number | ^(\d+)$ |
 | random numbers starting with 5 | ^5(\d*)$ |
-| When ** is pressed | `^[*][*]$` |
 | 123 or 456 | ^(123\|456)$ |
 | 6 digits |  ^(\d{6})$ |
 |4 to 6 digits|  ^(\d{4,6})$ |
