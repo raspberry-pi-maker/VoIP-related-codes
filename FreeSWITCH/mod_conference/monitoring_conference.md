@@ -172,7 +172,7 @@ function print_add_member()
     dnis = event:getHeader("Caller-Destination-Number")
     direction = event:getHeader("Caller-Direction")
     conference = conf_name .."@" ..profile
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")   
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")   
 end
 
 function print_del_member()
@@ -185,7 +185,7 @@ function print_del_member()
     dnis = event:getHeader("Caller-Destination-Number")
     direction = event:getHeader("Caller-Direction")
     conference = conf_name .."@" ..profile
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani.. "\nDNIS:" .. dnis  .. "\nSize:" .. size.. "\n")
 end
 
 function print_bgdial_result()
@@ -194,7 +194,7 @@ function print_bgdial_result()
     profile = event:getHeader("Conference-Profile-Name")
     conference = conf_name .."@" ..profile
     result = event:getHeader("Result")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nResult:" .. result.. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nResult:" .. result.. "\n")
 end
 
 function print_floor_change()
@@ -216,7 +216,7 @@ function print_start_recording()
     profile = event:getHeader("Conference-Profile-Name")
     conference = conf_name .."@" ..profile
     path = event:getHeader("Path")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\nPath:" .. path   .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\nPath:" .. path   .. "\n")
 end
 function print_stop_recording()
     action = event:getHeader("action")
@@ -224,7 +224,7 @@ function print_stop_recording()
     profile = event:getHeader("Conference-Profile-Name")
     conference = conf_name .."@" ..profile
     path = event:getHeader("Path")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\nPath:" .. path   .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\nPath:" .. path   .. "\n")
 end
 
 function print_play_file_member_done()
@@ -238,7 +238,7 @@ function print_play_file_member_done()
     dnis = event:getHeader("Caller-Destination-Number")
     direction = event:getHeader("Caller-Direction")
     file = event:getHeader("File")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani .. "\nDNIS:" .. dnis .. "\nFile:" .. file   .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .."\nMember-ID:" .. conf_member_id .. "\nDirection:" .. direction .. "\nANI:" .. ani .. "\nDNIS:" .. dnis .. "\nFile:" .. file   .. "\n")
 end
 
 function print_conference_create()
@@ -246,7 +246,7 @@ function print_conference_create()
     conf_name = event:getHeader("Conference-Name")
     profile = event:getHeader("Conference-Profile-Name")
     conference = conf_name .."@" ..profile
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\n")
 end
 
 function print_conference_destroy()
@@ -254,7 +254,7 @@ function print_conference_destroy()
     conf_name = event:getHeader("Conference-Name")
     profile = event:getHeader("Conference-Profile-Name")
     conference = conf_name .."@" ..profile
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action  .. "\n")
 end
 
 function print_execute_app()
@@ -267,7 +267,7 @@ function print_execute_app()
 	application = event:getHeader("Application")
 	ani = event:getHeader("Caller-ANI")
     dnis = event:getHeader("Caller-Destination-Number")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .. "\nMember-ID:" .. conf_member_id .. "\nCaller-Direction:" .. direction  .. "\nANI:" .. ani .. "\nDNIS:" .. dnis.. "\nApplication:" .. application  .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .. "\nMember-ID:" .. conf_member_id .. "\nCaller-Direction:" .. direction  .. "\nANI:" .. ani .. "\nDNIS:" .. dnis.. "\nApplication:" .. application  .. "\n")
 end
 function print_dtmf()
     action = event:getHeader("action")
@@ -279,7 +279,7 @@ function print_dtmf()
 	dtmf = event:getHeader("DTMF-Key")
 	ani = event:getHeader("Caller-ANI")
     dnis = event:getHeader("Caller-Destination-Number")
-	freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .. "\nMember-ID:" .. conf_member_id .. "\nCaller-Direction:" .. direction  .. "\nANI:" .. ani .. "\nDNIS:" .. dnis.. "\nDTMF:" .. dtmf  .. "\n")
+    freeswitch.consoleLog("WARNING",  "\nConference:" ..conference .."\naction:" .. action .. "\nMember-ID:" .. conf_member_id .. "\nCaller-Direction:" .. direction  .. "\nANI:" .. ani .. "\nDNIS:" .. dnis.. "\nDTMF:" .. dtmf  .. "\n")
 end
 
 
