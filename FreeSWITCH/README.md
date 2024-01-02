@@ -67,6 +67,7 @@
 * [Voice Conference with Inviting Example](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/voice_conference_invite.md). 
 * [Video Conferencing with Recording Example](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/video_conference_recording.md). 
 * [Invite other attendees during a conference](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/voice_conference_complex_invite.md). 
+* [Monitring Conference and get the number of attendees in the conference](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_conference/monitoring_conference.md). 
 
 <br>
 
