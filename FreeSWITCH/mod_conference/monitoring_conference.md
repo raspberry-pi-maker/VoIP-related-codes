@@ -154,7 +154,7 @@ FreeSWITCH will now call this Lua script whenever a conference event occurs. Thi
 
 ```lua
 --[[
- File Name : cu_event_conference.lua
+ File Name : event_conference.lua
  Description : hook event(Conference::maintenance>add-member/del-member/execute_app)
 ]]
 
