@@ -70,4 +70,44 @@ sox Input.wav  Half1.wav trim 0:0 0:30 # 0 ~ 30 seconds
 ``` bash
 sox Half1.wav Half2.wav Full.wav
 ```
+<br><br>
 
+# Useful ffmpeg commands
+
+<br>
+
+## make mp4 from a single png image
+
+<br>
+
+``` bash
+# convert to 15 seconds, (320X240)  mp4 file
+ffmpeg -loop 1 -i input.png -c:v libx264 -t 15 -pix_fmt yuv420p -vf scale=320:240 output.mp4
+
+# convert to 15 seconds, (640X480)  mp4 file
+ffmpeg -loop 1 -i input.png -c:v libx264 -t 15 -pix_fmt yuv420p -vf scale=640:480 output.mp4
+
+```
+
+<br>
+
+## Adding or replacing audio track 
+
+<br>
+This command adds a new audio track if the video file does not already have one. If an audio track already exists, the existing audio track is removed and replaced with new audio (input.wav).
+
+<br>
+
+``` bash
+ffmpeg  -i input.mp4 -i input.wav -c:v copy -map 0:v -map 1:a -y output.mp4
+```
+
+<br>
+
+If the video and audio lengths are different, add the '-shortest' option to add the audio or video based on the shorter length.
+
+<br>
+
+``` bash
+ffmpeg  -i input.mp4 -i input.wav -c:v copy -map 0:v -map 1:a -y -shortest output.mp4
+```
