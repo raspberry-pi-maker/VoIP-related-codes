@@ -81,3 +81,10 @@
 * [NAT Configuration](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/NAT%20Configuration). 
 
 
+<br>
+
+## xmlrpc
+
+* [xmlrpc](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_xmlrpc/README.md). 
+
+<br>
