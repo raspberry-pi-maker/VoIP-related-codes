@@ -83,10 +83,25 @@ sox Half1.wav Half2.wav Full.wav
 ``` bash
 # convert to 15 seconds, (320X240)  mp4 file
 ffmpeg -loop 1 -i input.png -c:v libx264 -t 15 -pix_fmt yuv420p -vf scale=320:240 output.mp4
-
 # convert to 15 seconds, (640X480)  mp4 file
 ffmpeg -loop 1 -i input.png -c:v libx264 -t 15 -pix_fmt yuv420p -vf scale=640:480 output.mp4
+```
+<br>
 
+## make webm from mp4
+
+<br>
+
+webm is an extension of google's vp codec video. It is mainly encoded with VP8 and VP9 codecs.
+
+<br>
+
+```bash
+# convert to vp8 webm file from mp4
+ffmpeg -i input.mp4 -c:v libvpx -b:v 1M  output.webm -y
+
+# convert to vp8 webm file from mp4
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -b:v 1M output.webm -y
 ```
 
 <br>

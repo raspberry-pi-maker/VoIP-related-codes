@@ -11,6 +11,7 @@
 * [profile, context, extension, leg, channel variable](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/basic_concept.md). 
 * [Regular Expressions in the dialplan](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/regular_expression.md). 
 * [Remote access using fs_cli](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/remote_fs_cli.md). 
+* [Database ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/database.md). 
 
 
 <br>

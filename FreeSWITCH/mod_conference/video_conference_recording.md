@@ -81,7 +81,8 @@ For video conferencing, you need to add a few video-related configurations to th
       <!--<param name="video-codec-bandwidth" value="1mb"/>-->
       <param name="video-codec-bandwidth" value="64KB"/>
       <param name="video-fps" value="10"/>
-      <param name="auto-record" value="/usr/local/freeswitch/recordings/${strftime(%Y/%m/%d)}/${conference_name}_${strftime(%Y%m%d%H%M%S)}.mp4"/>
+      <!--<param name="auto-record" value="/usr/local/freeswitch/recordings/${strftime(%Y/%m/%d)}/${conference_name}_${strftime(%Y%m%d%H%M%S)}.mp4"/>-->
+      <param name="auto-record" value="/usr/local/freeswitch/recordings/${strftime(%Y/%m/%d)}/${conference_name}.mp4"/>
       <param name="min-required-recording-participants" value="1"/>
     </profile>
 ```
