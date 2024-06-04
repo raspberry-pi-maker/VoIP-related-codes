@@ -28,6 +28,9 @@ sox infile.wav -r 44100  outfile.wav
 # converts a wav ﬁle to a raw 16-bit signed integer mono ﬁle with 8kHz
 sox infile.wav -t raw outfile.pcm  # Maintain wav file format
 
+# converts a wav ﬁle to a 16-bit signed integer mono ﬁle with 8kHz wav
+sox infile.wav -b 16 -e signed-integer -c 1 -r 8k outfile.wav
+
 # converts a wav ﬁle to a raw 16-bit signed integer mono ﬁle with 8kHz
 sox infile.wav -b 16 -e signed-integer -c 1 -r 8k -t raw outfile.pcm
 
@@ -70,6 +73,21 @@ sox Input.wav  Half1.wav trim 0:0 0:30 # 0 ~ 30 seconds
 ``` bash
 sox Half1.wav Half2.wav Full.wav
 ```
+<br>
+
+## Trim 
+<br>
+
+``` bash
+#sox input output trim <start> <duration> 
+#If you want to make 10 seconds audio file from the start
+sox Input.wav Output.wav trim 0 10
+
+#If you want to make 10 seconds audio file from the 5second
+sox Input.wav Output.wav trim 5 10
+
+```
+
 <br><br>
 
 # Useful ffmpeg commands
