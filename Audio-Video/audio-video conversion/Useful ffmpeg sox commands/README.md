@@ -144,3 +144,19 @@ If the video and audio lengths are different, add the '-shortest' option to add 
 ``` bash
 ffmpeg  -i input.mp4 -i input.wav -c:v copy -map 0:v -map 1:a -y -shortest output.mp4
 ```
+
+
+<br>
+
+## Changing Audio tempo
+
+<br>
+Tempo must be in the [0.5, 100.0] range. 
+
+<br>
+
+``` bash
+ffmpeg -i in.wav -filter:a atempo=0.8 out.wav
+```
+
+<br>
