@@ -165,6 +165,42 @@ The special caller profile variables are as follows. The caller profile is just 
 
 <br/><br/>
 
+## debug channel variable in your lua script
+In lua scenarios, it is sometimes necessary to check variables of the current session. The following lua example prints information about the current session at alert level. You can change the level to info, notice, etc. as needed. <br>
+The important thing is that the output from the info application varies depending on the stage of the session (ring, answer, hangup). Please test it yourself.
+<br/>
+
+**One thing to note is that the variable names output by the info application and the variable names used in the session are slightly different. Here are some examples:**
+
+|Info variable name|channel variable name|description|
+|------|---|---|
+|Channel-State|state|Current state of the channel|
+|Channel-Name|channel_name|Channel name|
+|Unique-ID|uuid|uuid of this channel's call leg|
+
+<br/>
+
+A detailed explanation of the differences in variable names is given in [Channel Variables](https://developer.signalwire.com/freeswitch/FreeSWITCH-Explained/Dialplan/Channel-Variables_16352493/#variable-expansion) .
+
+<br/><br/>
+
+```lua
+me = session:getVariable("destination_number")  --callee
+you = session:getVariable("caller_id_number")   --caller
+
+-- Use info application for debug
+session:execute("info","alert");
+session:ring(1000)
+session:execute("info","alert");
+session:answer()
+session:execute("info","alert");
+session:sleep(1000)
+session:hangup()
+session:execute("info","alert");
+```
+
+<br/><br/>
+
 ## channel variable example 1
 
 Create and add the following dialplan. Set two variables using the set application. Set the values “1002” and “Customer123” in “dialed_extension” and “customer”, respectively. Then run test_channelvar.lua.
