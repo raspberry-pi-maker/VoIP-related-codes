@@ -84,6 +84,7 @@ ___Modified___
 * In the BYE message, change callee_id_name to callee_id_number. Because callee_id_name might contain space, This white space can prevent the SIP parser from properly parsing the message.
 
 <br>
+
 ___Original___
 
 ``` c
