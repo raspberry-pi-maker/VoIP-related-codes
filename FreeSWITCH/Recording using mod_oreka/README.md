@@ -104,7 +104,7 @@ ___Modified___
     sip_header.write_function(&sip_header, "%s sip:%s@%s:5060 SIP/2.0\r\n", method, callee_id_number, globals.local_ipv4_str);
 ``` 
 
-<br><br>
+<br>
 
 If you modified the source codes, then re-build the mod_oreka and install it.
 ``` bash
@@ -115,7 +115,7 @@ $ ls -al /usr/local/freeswitch/mod/* |grep oreka
 -rwxr-xr-x 1 root root     1300 Dec 22 19:15 /usr/local/freeswitch/mod/mod_oreka.la
 -rwxr-xr-x 1 root root   118600 Dec 22 19:15 /usr/local/freeswitch/mod/mod_oreka.so
 ``` 
-
+<br>
 
 ### Check if the mod_oreka module enabled. 
 
@@ -322,4 +322,39 @@ Content-Length: 0
 RTP packets must be received by analyzing the media information included in the SDP of the INVITE-1 and INVITE-2 messages.
 If you analyze the above SIP messages, you can see that RX packets in PCMU format are sent to port 21934 in the INVITE-1 message.
 Similarly, in the INVITE-2 message, it can be seen that a TX packet in PCMU format is sent to port 21898.
+
+<br/><br/>
+
+
+## Run mod_oreka dynamically
+<br>
+
+There may be cases where you need to selectively forward voice packets using mod_oreka only for certain calls, rather than all calls.
+In this case, you can use the uuid of the call.
+
+Information about the calls currently in progress can be read with the "show calls" command or directly from core.db.
+
+<br/>
+
+
+```sql
+sqlite3 /usr/local/freeswitch/db/core.db 
+
+sqlite> .headers on
+sqlite> SELECT uuid, cid_num, callee_num, dest, context, direction, call_uuid FROM channels;
+uuid|cid_num|callee_num|dest|context|direction|call_uuid
+13de5da7-8d5b-45e2-81ed-f5c05960e367|PhonerLite|5003|07047378300|blueivr|inbound|13de5da7-8d5b-45e2-81ed-f5c05960e367
+f2d8417d-7c98-4b5d-b959-b5c9aa22f4d2|PhonerLite|5003|5003|default|outbound|13de5da7-8d5b-45e2-81ed-f5c05960e367
+```
+
+<br/>
+
+The two rows above are information about two channels for one call. The first row is a call coming into FreeSWITCH from the outside. Therefore, the direction value is inbound based on FreeSWITCH. And the second row is a call connected to extension 5003 from FreeSWITCH. It is an outbound call based on FreeSWITCH. The link connecting these two rows is call_uuid. This value uses the uuid of A Leg. Now, we can know both A Leg and B Leg information for one call currently in progress.
+
+Now you can send voice packets to the current call using mod_oreka with the following uuid_oreka command in the fs_cli console:
+
+```bash
+freeswitch@blueivr> uuid_oreka 13de5da7-8d5b-45e2-81ed-f5c05960e367
+```
+
 <br/>
