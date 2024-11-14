@@ -92,3 +92,9 @@
 * [xmlrpc](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/mod_xmlrpc/README.md). 
 
 <br>
+
+## Useful Tools
+
+* [VSCode extension for Freeswitch Lua script](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/tools/README.md). 
+
+<br>
