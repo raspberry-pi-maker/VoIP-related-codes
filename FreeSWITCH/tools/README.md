@@ -10,7 +10,7 @@ First, download the following extension.
 * [Lua4FreeSWITCH-0.0.3.vsix](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/tools/Lua4FreeSWITCH-0.0.3.vsix). 
 
 <br>
-You can install them all at once by pressing Ctrl(cmd)+Shift+P, selecting "Install from VSIX..." from the command palette, and then selecting the downloaded vsix file.
+You can install the extension all at once by pressing Ctrl(cmd)+Shift+P, selecting "Install from VSIX..." from the command palette, and then selecting the downloaded vsix file.
 
 <br/>
 
