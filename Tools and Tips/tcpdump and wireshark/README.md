@@ -207,7 +207,7 @@ If you want to know more about a specific packet, double-click it.
 <br/>
 
 There are many more useful features in the Telephony menu than the sip and rtp filters.
-
+The important menu is “VoIP Calls” and I will only explain this menu.
 <br/>
 
 ### VoIP Calls
