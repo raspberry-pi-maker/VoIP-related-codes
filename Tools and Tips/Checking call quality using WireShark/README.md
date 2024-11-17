@@ -46,7 +46,7 @@ RTP voice packets are transmitted at ptime intervals defined in SDP. Typically, 
 
 To maintain stable VoIP quality in a jitter environment, terminals use buffering. The reason for buffering RTP packets is simple. In an Ethernet network, RTP packets can be received unstably due to network quality or the terminal not sending RTP packets on time. For this reason, 3 to 5 RTP packets are buffered and then taken out one by one to play voice at an accurate time interval (20ms) or to send it to another SIP device. Therefore, if 3 are buffered, a delay of 0.06 (60ms) seconds occurs. However, since voice packets received through buffering are used, better call quality can be provided.
 
-But what happens if a terminal using a 60ms jitter does not receive an RTP packet for 60ms? In this case, the terminal will consume all 3 packets buffered and either replace them with silent packets or give up consuming them due to a lack of packets to consume in the next 20ms schedule.
+But what happens if a terminal using a 60ms jitter does not receive an RTP packet for 60ms? In this case, the terminal will consume all 3 packets buffered and either replace the empty buffer with silent packets or give up consuming them due to a lack of packets to consume in the next 20ms schedule.
 
 When this phenomenon occurs, voice is broken up on the receiving side because accurate voice packet transmission and reception are not performed. This leads to a decline in call quality.
 
