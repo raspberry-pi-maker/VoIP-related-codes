@@ -369,3 +369,92 @@ If you create a script file to run the above task at regular intervals and add i
 
 
 
+<br/>
+
+# Python Programming and Version Problem
+
+<br/>
+
+Paho is a Python client module provided by the EClipse Foundation with the Mosquito MQTT broker. Use the pip3 command to install the paho.
+
+```bash
+pip3 install paho-mqtt
+```
+However, the API has changed a little depending on the paho version.
+Depending on your Python version, a different version of paho will be installed.
+Here, I introduce a simple code that does not cause an error depending on the pahi version. 
+
+You can read the mqtt.__version__ value to check whether the version value is 1.X.X or 2.X.X, and then proceed with different initialization processes.
+
+```python
+'''
+pip install websockets
+'''
+
+import paho.mqtt.client as paho
+import paho.mqtt as mqtt
+import time
+
+mqttc = None
+
+def on_message(clnt, userdata, msg):     
+    txt = msg.payload.decode('utf-8')
+    print("Received:", txt)
+
+def on_connect_v1(client, userdata, flags, rc):    #paho.CallbackAPIVersion.VERSION1은 properties 파라미터가 없음
+    print("Connected with result code "+str(rc))
+    if rc == 0:
+        print("Connection successful")
+    elif rc == 1:
+        print("Connection refused - incorrect protocol version")    
+    elif rc == 2:
+        print("Connection refused - invalid client identifier")    
+    elif rc == 3:
+        print("Connection refused - server unavailable")    
+    elif rc == 4:
+        print("Connection refused - bad username or password")    
+    elif rc == 5:
+        print("Connection refused - not authorised")    
+    else:
+        print("Connection refused unused")  
+    if rc == 0:
+        mqttc.subscribe(f"Your Topic")
+    else:
+        sys.exit(1)
+
+
+def on_connect(client, userdata, flags, rc, properties):    #paho.CallbackAPIVersion.VERSION1은 properties 파라미터가 없음
+    on_connect_v1(client, userdata, flags, rc)
+
+def connect_mqtt(ip, port):
+    global mqttc
+
+    ver = mqtt.__version__.split('.')  # '2.0.0' or '1.6.X'
+    print(ver)
+    if ver[0] == '1':
+        mqttc = paho.Client()
+        mqttc.username_pw_set(username="your id",password="your pw")
+        mqttc.on_connect = on_connect_v1
+        mqttc.on_message = on_message
+    else:    
+        mqttc = paho.Client(paho.CallbackAPIVersion.VERSION2)
+        mqttc.username_pw_set(username="your id",password="your pw")
+        mqttc.on_connect = on_connect
+        mqttc.on_message = on_message
+
+    rc = mqttc.connect(ip, port)    
+
+def init_mq(ip, port):
+    connect_mqtt(ip, port)
+    time.sleep(0.5)
+    mqttc.loop_forever()
+
+if __name__ == "__main__":
+
+    th = threading.Thread(target=init_mq, args=(args.mqtt, args.port, ))
+    th.start()
+
+    while True:
+        time.sleep(1)
+        #Do your Extra jobs here !!
+```
