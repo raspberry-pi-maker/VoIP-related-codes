@@ -338,7 +338,18 @@ keyfile /etc/letsencrypt/live/spypiggy.shop/privkey.pem
 <br/>
 
 Now your mosquitto can listen on ports 1883, 8883, 9001 and 9003. Restart the process for the changes to take effect.
+You can check the port information that mosquitto is binding to using the netstat command.
+<br/>
 
+```bash
+[root@spypiggy SimpleCenterCustomerG]# netstat -nltp|grep mosquitto
+tcp        0      0 0.0.0.0:1883            0.0.0.0:*               LISTEN      209884/mosquitto    
+tcp        0      0 0.0.0.0:8883            0.0.0.0:*               LISTEN      209884/mosquitto    
+tcp6       0      0 :::1883                 :::*                    LISTEN      209884/mosquitto    
+tcp6       0      0 :::9001                 :::*                    LISTEN      209884/mosquitto    
+tcp6       0      0 :::9003                 :::*                    LISTEN      209884/mosquitto    
+tcp6       0      0 :::8883                 :::*                    LISTEN      209884/mosquitto 
+```
 
 <br/>
 
