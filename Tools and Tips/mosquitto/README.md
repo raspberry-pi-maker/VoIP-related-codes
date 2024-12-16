@@ -104,7 +104,7 @@ When the sender receives the PUBCOMP the process is complete and it can delete t
 Installation is very simple. I will install Mosquito client for testing.
 
 ```bash
-# For Rehhat or Rocky
+# For Redhat or Rocky
 dnf -y install mosquitto 
 
 # For Ubuntu or Debian
