@@ -192,6 +192,7 @@ When a call is made to 1002 from the softphone located at 192.168.150.131, exten
       <condition field="destination_number" expression="^(1002)$">
         <action application="log" data="ALERT ==== INTERNAL CALL for oreka testing ======"/>
         <action application="set" data="dialed_extension=$1"/>
+        <action application="set" data="oreka_sip_h_X-uuid=${uuid}"/>
         <action application="set" data="oreka_sip_h_X-customer=Customer123"/>
         <action application="set" data="oreka_sip_h_X-extension=${destination_number}"/>
         <action application="oreka_record"/>
@@ -236,6 +237,7 @@ CSeq: 1 INVITE
 Contact: sip:freeswitch@192.168.150.128:5061
 Max-Forwards: 70
 Subject: BEGIN RX recording of PhonerLite
+X-uuid: 93c0027a-01db-4964-850a-14c92d290036
 X-customer: Customer123
 X-extension: 1002
 Content-Type: application/sdp
@@ -264,6 +266,7 @@ CSeq: 1 INVITE
 Contact: sip:freeswitch@192.168.150.128:5061
 Max-Forwards: 70
 Subject: BEGIN TX recording of PhonerLite
+X-uuid: 93c0027a-01db-4964-850a-14c92d290036
 X-customer: Customer123
 X-extension: 1002
 Content-Type: application/sdp
