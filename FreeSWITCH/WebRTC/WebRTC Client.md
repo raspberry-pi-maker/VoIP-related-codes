@@ -1,3 +1,31 @@
+# WebRTC and FreeSWITCH
+
+<br/>
+
+## mod_verto
+If you want to implement WebRTC in FreeSWITCH, the first thing you might think of is mod_verto. However, mod_verto does not use the SIP protocol. mod_verto uses a JSON-RPC based signaling protocol.
+
+
+![log](./image/3.png)
+
+<br/>
+
+As you can see from the picture, verto uses its own unique protocol. This unique usage is not a problem if implemented only in FreeSWITCH, but it is a disadvantage when applied to various PBX systems. Therefore, it is better to use a method that can implement webrtc using the SIP protocol, which is easier to port to other systems, rather than mod_verto.
+
+<br/>
+
+## SIP over websocket
+Generally, SIP implements the protocol using udp or tcp communication. It is recommended to use 5060 and 5080 as the connection port, but the port can be changed for security reasons. In addition to udp and tcp communication, FreeSWITCH also supports SIP connection using websocket. Websocket also operates on top of the tcp protocol, but it is a special protocol designed for communication with browsers.
+
+
+![log](./image/4.png)
+
+<br/>
+
+This is an implementation that allows you to create a SIP endpoint directly in the browser and use websocket to communicate with FreeSWITCH via SIP.
+
+<br/>
+
 # WebRTC Client
 
 In order to integrate with WebRTC in various PBX systems including FreeSWITCH, a module that can implement SIP signaling is required. WebRTC is literally RTC (Realtime Communication) that can be used on the Web. In other words, it can be seen that only RTP is implemented. Therefore, in order to integrate with PBX, telephone signaling represented by SIP must be added.
