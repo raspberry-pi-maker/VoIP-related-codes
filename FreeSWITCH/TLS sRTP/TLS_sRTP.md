@@ -224,7 +224,7 @@ The internal.xml file uses the global variable values ​​set in the vars.xml 
 
 # TLS SIP signaling test
 
-Before applying SRTP, let's save what we've done so far and test if tls is working properly. The test terminal used was a PortSIP softphone.
+Before applying SRTP, let's save what I've done so far and test if tls is working properly. The test terminal used was a PortSIP softphone.
 
 <br>
 
@@ -292,7 +292,7 @@ Encryption of the RTP streams (audio and video) ensures that the actual content 
 
 <br>
 
-As you can see above, we will use SRTP, which is commonly used.
+As you can see above, I will use SRTP, which is commonly used.
 
 <br>
 
@@ -462,7 +462,7 @@ Below is a capture from fs_cli of extension 5004 registering using tls.
 # Wrapping up
 
 <br/>
-I looked at how to apply TLS/SRTP to extension phones in FreeSWITCH. Support may vary depending on the HW phone used. Therefore, it is necessary to refer to the phone vendor's documentation to check in advance whether there is a problem with applying TLS/SRTP with FreeSWITCH. In this article, we used the PortSIP softphone for easy testing. Many FreeSWITCH documents related to applying TLS/SRTP also do not reflect the changes in the latest version. Please note that if you set up and test based on documents searched on the Internet or materials searched using AI, there may be cases where it does not work properly.
+I looked at how to apply TLS/SRTP to extension phones in FreeSWITCH. Support may vary depending on the HW phone used. Therefore, it is necessary to refer to the phone vendor's documentation to check in advance whether there is a problem with applying TLS/SRTP with FreeSWITCH. In this article, I used the PortSIP softphone for easy testing. Many FreeSWITCH documents related to applying TLS/SRTP also do not reflect the changes in the latest version. Please note that if you set up and test based on documents searched on the Internet or materials searched using AI, there may be cases where it does not work properly.
 
 
 
