@@ -404,6 +404,32 @@ These packets are SRTP packets. They are 10 bytes larger than RTP packets. This 
 
 ![config](./image/11.png)
 
+<br/>
+
+And you can also check it through the SIP invite message. When TLS is applied, it is difficult to check SIP messages with 3rd party programs such as sngrep and wireshark. In this case, as I will explain later, you can view all SIP messages processed by FreeSWITCH in unencrypted plaintext with the "sofia global siptrace on" command in fs_cli.
+You can check the "a=crypto" line in SDP as follows.
+
+```
+v=0
+o=- 2250728722890692614 2 IN IP4 127.0.0.1
+s=-
+t=0 0
+m=audio 20100 RTP/SAVP 105 18 0 8 101
+c=IN IP4 192.168.219.103
+a=rtpmap:105 opus/48000/2
+a=fmtp:105 minptime=10;useinbandfec=1
+a=rtpmap:18 G729/8000
+a=fmtp:18 annexb=no
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:101 telephone-event/8000
+a=mid:audio
+a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:tkUQKtgJwuDAnXoq9cxoZiKXubZsSwJCDWhPcLjx
+a=crypto:2 AES_CM_128_HMAC_SHA1_32 inline:HrutUOY3ninoskO2RF1z9IAQ/NQExv/5gcgCMvtZ
+a=rtcp-fb:105 transport-cc
+a=ssrc:501506029 cname:/HX/ux4s3iFUek+S
+```
+
 <br/><br/>
 
 # Cooking TLS and SRTP
