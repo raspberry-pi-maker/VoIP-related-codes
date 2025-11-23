@@ -6,7 +6,7 @@
 
 ## Speech Command by Pytorch
 
-* [Speech Command Classification with torchaudio](https://pytorch.org/tutorials/intermediate/speech_command_recognition_with_torchaudio.html)
+* [Speech Command by Pytorch](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/Tools%20and%20Tips/Speech%20Command/SpeechCommand-PyTorch.md)
 
 <br><br>
 
