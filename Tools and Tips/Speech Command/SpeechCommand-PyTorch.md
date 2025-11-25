@@ -1,28 +1,4 @@
-# Speech Command
-
-Speech Command is a speech recognition solution originally released by Google's Tensorflow.
-Instead of an STT solution that converts all speech to text, this is a solution that finds results from a dataset consisting of dozens of words. Therefore, it is sufficient if the input voice is also about 1 second long.
-
-This solution is particularly useful in IVR. In certain situations, when only a simple response such as Yes or No is input, a specific number can be input using DTMF, but this technology can be used in interactive IVR services.
-Another use is to determine whether a call made to a customer in an outbound solution is connected to an answering machine, fax, etc.
-Fax can be implemented without the help of voice recognition by using a specific tone recognition function, but Answering Machine cannot be processed with tone recognition.
-In Korea, where I live, home answering machines are rarely used. When making a mobile call, if the other party's cell phone is busy or turned off, a message may appear and the call may be connected to an answering machine. In this case as well, an announcement message is played at the same time as the answering machine is connected. Since the number of telecommunication companies is limited, it can be useful to collect the first part of these announcements and apply the Speech Command solution.
-And the Speech Command solution has the advantage of being very easy to learn and apply. If you want to use a typical voice recognition solution, you will probably have to go through an incredibly difficult process. Otherwise, you will have to pay a significant fee.
-<br><br>
-
-## Speech Command by Tensorflow
-
-
-* [tensorflow/tensorflow/examples/speech_commands](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples)
-* [Simple audio recognition: Recognizing keywords](https://www.tensorflow.org/tutorials/audio/simple_audio)
-* [docs/site/en/tutorials/audio/simple_audio.ipynb](https://github.com/tensorflow/docs/blob/master/site/en/tutorials/audio/simple_audio.ipynb)
-
-Previously, in Tensorflow 1.X, I used the Speech Command to learn Yes and No necessary for IVR. The last of the links above is an example introduced in the first version of Speech Command upgraded to TensorFlow 2.X. The command dataset used for Speech Command is also much simpler than the current example.
-
-Today I will be working in PyTorch, not TensorFlow, so if you are a TensorFlow user, please check the details through the link above.
-<br><br>
-
-## Speech Command by Pytorch
+# Speech Command by Pytorch
 
 I will skip explaining things such as installing the software required to run PyTorch and get straight to the point.
 An example similar to TensorFlow is introduced on the next page. This example consists of a dataset of 35 instructions. The example explains everything well, from downloading the dataset to converting it to the format required for learning and learning.
