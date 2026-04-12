@@ -96,7 +96,7 @@ sipsak -vv -T -s sip:username@example.com
 
 ### REGISTER messages
 
-You can verify whether the terminal is successfully registered by sending a REGISTERr message to the SIP Server.
+You can verify whether the terminal is successfully registered by sending a REGISTER message to the SIP Server.
 
 ```bash
 sipsak -U -s sip:1001@sipserver.com
