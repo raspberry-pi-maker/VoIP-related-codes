@@ -6,6 +6,12 @@
 
 <br>
 
+## Useful Tips
+
+* [Call transfer using attended transfer ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/attended_transfer.md). 
+
+<br>
+
 ## Basic concepts
 
 * [profile, context, extension, leg, channel variable](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/basic/basic_concept.md). 
