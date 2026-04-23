@@ -104,7 +104,15 @@ This time, you need to prepare a dial plan for internal calls as follows. The fo
 
 <br>
 
-Attended Transfer must occur during an internal call. Therefore, you only need to prepare a dial plan for internal calls in advance. All you need is the dial plan you used for internal call transfer in Bliend Transfer.
+The following link contains an implementation of attended transfer.
+If you are interested in attended transfer, please read this article. A detailed explanation of bind_meta_app is also available in this article.
+
+* [attended transfer](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/attended_transfer.md)
+
+<br>
+
+
+Attended Transfer must occur during an internal call. Therefore, you only need to prepare a dial plan for internal calls in advance. All you need is the dial plan you used for internal call transfer in Blind Transfer.
 
 <br>
 
