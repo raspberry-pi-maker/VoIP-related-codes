@@ -11,6 +11,8 @@
 * [Call transfer using attended transfer ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/attended_transfer.md). 
 * [Selective Call recording ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/selective_recording.md). 
 
+* [In Call IVR Service ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/incall_IVR_service.md). 
+
 <br>
 
 ## Basic concepts
