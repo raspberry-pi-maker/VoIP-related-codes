@@ -58,7 +58,7 @@ To test a call transfer, you must first create a call.
 1. Let's create the following scenario first.
 2. Call FreeSWITCH line 07047378800 from external trunk 01090224600.
 2. Extension 5007 answers a call from external line 01090224600.
-3. 5007 performs an attended transfer to 5006.
+3. 5007 press *3 to perform an attended transfer.
 
 To do this, first create a dial plan as follows.
 
@@ -67,11 +67,11 @@ The explanation of how to create a sip profile for a domestic dial plan is omitt
 ```xml
 <!--trunk xml conf/dialplan/***.xml-->
     <extension name="TRUNK_CUSTOMER_BLUE"> 
-      <condition field="${sip_to_user}" expression="^(07047378300)$">
+      <condition field="${sip_to_user}" expression="^(07047378800)$">
             <action application="log" data="ALERT destination_number=${destination_number}"/>
             <action application="set" data="continue_on_fail=true"/>
             <action application="export" data="hold_music=$${base_dir}/sounds/common/elise.wav" /> 
-            <!-- Press *3 during a call to run extension 86 -->
+            <!-- Press *3 during a call to run extension 88 -->
             <action application="bind_meta_app" data="3 b s execute_extension::86 XML features"/>
 
             <action application="bridge" data="USER/5007@$${domain}"/>
