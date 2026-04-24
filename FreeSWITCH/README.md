@@ -13,6 +13,8 @@
 
 * [In Call IVR Service ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/incall_IVR_service.md). 
 
+* [Eavesdropping ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/eavesdropping.md). 
+
 <br>
 
 ## Basic concepts

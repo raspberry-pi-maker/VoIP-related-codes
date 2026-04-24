@@ -34,9 +34,9 @@ To do this, first create a dial plan as follows.
 The explanation of how to create a sip profile for a domestic dial plan is omitted.
 
 To test a call transfer, you must first create a call.
+Let's create the following scenario first.
 
-1. Let's create the following scenario first.
-2. Call FreeSWITCH line 07047378800 from external trunk 01090224600.
+1. Call FreeSWITCH line 07047378800 from external trunk 01090224600.
 2. Extension 5007 answers a call from external line 01090224600.
 3. 5007 press *5 to perform an IVR service.
 4. FreeSWITCH executes Lua scripts registered in the dial plan.
