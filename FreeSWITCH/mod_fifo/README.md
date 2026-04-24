@@ -88,30 +88,31 @@ reg_user,realm,token,url,expires,network_ip,network_port,network_proto,hostname,
 2 total.
 ```
 
-
+<br><br>
 
 # External Phone
-<br><br>
+<br>
 
 My favorite softphone for trunk call testing is the PhonerLite. 
 
-<br><br>
+<br>
 
 ![config](./image/fifo3.png)<br/><br/>
 
-Do not enter server information as shown in the picture and do not check Register. ___However, in User in the next tab, a random value (generally a phone number) must be entered for UserName.___
+Do not enter server information as shown in the picture and do not check Register.  ___However, in User in the next tab, a random value (generally a phone number) must be entered for UserName.___
 
 <br/><br/>
 
 
 # Freeswitch Settings
-<br><br>
 
-Now for the most important Freeswitch settings. Since the extension setting has been done in advance, set the dialplan first.
+<br>
 
-<br/><br/>
+Now for the most important Freeswitch settings. Since the extension setting has been done, set the dialplan first.
 
-## FIFO module load
+<br/>
+
+## Load FIFO module
 
 <br>
 
@@ -130,7 +131,7 @@ First, modify the conf/auto_loads/modules.conf.xml file to load mod_fifo when Fr
 ```
 <br>
 
-## __Trunk Call Dialplan__
+## Trunk Call Dialplan
 
 <br>
 
@@ -139,7 +140,7 @@ You first create a dial plan for incoming calls from an external phone (usually 
 I set the SIP port used by the internal extension to 5060 and the SIP port for incoming calls to 5080. And the profile name was set to blueivr.  For reference, you can also see that the profile name used by the station is internal and the port is 5060.
 __And profile blueivr is set in sip_profiles to use blueivr context and internal to use default context.__
 
-<br/><br/>
+<br/>
 
 ``` bash
 freeswitch@blueivr> sofia status
@@ -154,17 +155,17 @@ freeswitch@blueivr> sofia status
 
 ```
 
-<br/><br/>
+<br/>
 
 Add contents for FIFO test as follows under blueivr context in dialplan directory. This is the dial plan applied to incoming calls to 2XXX. Prepare the voice files used in the dial plan below in advance.  The FIFO queue name can be anything you want. I called it "fifoqueue" for convenience.
 
-<br/><br/>
+<br/>
 
 ``` xml
 <include>
   <context name="blueivr">
 
-    ......
+    <!-- ...... -->
     
     <extension name="FIFO_TEST">
 	    <condition field="destination_number" expression="^(2000)$">
@@ -174,22 +175,22 @@ Add contents for FIFO test as follows under blueivr context in dialplan director
       </condition>
     </extension>
 
-    ......
+    <!-- ...... -->
 
   </context>
 </include>
 ```
 
 <br/>
+
 The above dial plan can be implemented in one scenario using lua script.
-<br/><br/>
+
+<br/>
 
 ``` xml
 <include>
   <context name="blueivr">
-
-    ......
-    
+    <!--    ......    -->
     <extension name="FIFO_TEST2">
 	    <condition field="destination_number" expression="^(2001)$">
         <action application="set" data="continue_on_fail=true"/>
@@ -197,7 +198,7 @@ The above dial plan can be implemented in one scenario using lua script.
         <action application="lua" data="fifo_test.lua"/> 
       </condition>
     </extension>
-    ......
+    <!--    ......    -->
 
   </context>
 </include>
@@ -223,7 +224,8 @@ session:execute("fifo", "fifoqueue in /$${sounds_dir}/exit-message.wav $${sounds
 
 ```
 
-<br/><br/>
+<br/>
+
 Calls to 2000 or 2001 are placed in a FIFO queue that works as follows:
 
 * __It listens to music-on-hold.wav repeatedly until the agent connects.__
@@ -232,7 +234,131 @@ Calls to 2000 or 2001 are placed in a FIFO queue that works as follows:
 
 <br/><br/>
 
-## __Extension Dialplan__
+
+## fifo.conf.xml
+
+<br/>
+
+mod_fifo has two operating modes depending on the configuration method, and the way the bell rings changes completely depending on which method is selected.
+
+<br/>
+
+### How mod_fifo works
+
+<br/>
+
+1. Consumer Method (Picking the Call)
+
+This method allows agents (extensions) to directly call a specific number and "consume" a person waiting in the queue.
+How it works: The extensions do not ring even when a call enters the queue.
+Situation: When an agent is ready and calls a number with the `fifo <queue_name> out` command set, they are connected to the person who has been waiting the longest in the queue.
+
+<br/>
+
+2. Outbound Strategy (System makes the call)
+
+In this method, when a call enters the queue, it places the call to the extension list (Outbound Nodes) configured with FreeSWITCH. Here, you can determine how the ringing occurs.
+
+| Strategy | Description |
+| :--- | :--- |
+| **ringall (Simultaneous Ringing)** | The bell rings for all members in the queue **simultaneously**. It connects to the first person to answer. |
+| **enterprise (Sequential Ringing)** | The bell rings **one person at a time** in the order of the list. If the first person does not answer, the call is passed to the next member in line. |
+
+<br/>
+
+🚨 **Important Notes**
+
+The Consumer Method requires extension users to constantly monitor the FIFO queue to check if a call has entered the FIFO queue. Since it necessitates the use of display boards or applications to monitor the FIFO queue, it is inconvenient to use in practice. Therefore, most users utilize the Outbound Strategy in FreeSwitch, which makes calls to extensions.
+**And if you do not specify how the FIFO works, the FIFO uses ringall by default.**
+
+
+Open the fifo.conf.xml file and create the FIFO queue name "fifoqueue" used in dialplan.
+
+<br/>
+
+
+📌 **Consumer Method**
+
+<br/>
+
+The **Consumer Method (Pull Method)** is a method where the system does not automatically ring the phone, but rather an agent (Consumer) calls directly to pick up a customer from the queue when they are ready.
+
+To implement this, you must remove the automatic dialing settings from fifo.conf.xml and create a number in the dial plan that allows an agent to pull calls.
+
+
+```xml
+<configuration name="fifo.conf" description="FIFO Configuration">
+  <settings>
+    <param name="delete-all-outbound-member-on-startup" value="false"/>
+  </settings>
+  <fifos>
+    <fifo name="fifoqueue" importance="0">
+      </fifo>
+  </fifos>
+</configuration>
+```
+
+And to pull calls from the FIFO queue, add a dial plan as follows.
+
+```xml
+<extension name="pick_up_from_fifo">
+  <condition field="destination_number" expression="^7001$">
+    <action application="answer"/>
+    <action application="fifo" data="fifoqueue out nowait"/>
+  </condition>
+</extension>
+```
+
+<br/>
+
+📌 **Outbound Strategy**
+
+
+<br/>
+
+``` xml
+<configuration name="fifo.conf" description="FIFO Configuration">
+  <settings>
+    <param name="delete-all-outbound-member-on-startup" value="false"/>
+  </settings>
+  <fifos>
+    <fifo name="fifoqueue@$${domain}" importance="0">
+      <!-- <member timeout="60" simo="1" lag="20">{fifo_member_wait=wait}user/1001@$${domain}</member> -->
+    </fifo>
+  </fifos>
+</configuration>
+```
+<br/>
+
+The above configuration uses the ringall method because the FIFO operation method is not specified. You can also explicitly add outbound_strategy="ringall" as shown below.
+
+If you want to use the enterprise method, configure it as follows.
+
+``` xml
+<configuration name="fifo.conf" description="FIFO Configuration">
+  <settings>
+    <param name="delete-all-outbound-member-on-startup" value="false"/>
+  </settings>
+  <fifos>
+    <fifo name="fifoqueue@$${domain}" importance="0" outbound_strategy="enterprise">
+      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1001@$${domain}</member>
+      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1002@$${domain}</member>
+      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1003@$${domain}</member>
+    </fifo>
+
+  </fifos>
+</configuration>
+```
+<br/>
+
+In the above settings, the first call to arrive in the FIFO is always connected to 1001. If the connection fails due to no answer or being busy, the call is connected to 1002. Note that this is not a round-robin method.
+
+Members of a FIFO queue can be used statically as in the XML above, but they can also be dynamically joined or withdrawn from the FIFO queue by calling a specific number (6*x, 6#x) as shown below.
+
+<br/>
+
+
+## Extension Dialplan
 
 <br>
 
@@ -249,9 +375,9 @@ Since the following dial plan will be used in the station, modify the internal c
 <include>
   <context name="default">
 
-  ......
+  <!-- ...... -->
   
-  <extension name="Agent Login">
+  <extension name="FIFO Agent Login">
     <condition field="destination_number" expression="^6\*(\d)">
       <action application="answer"/>
       <action application="set" data="result=${fifo_member(add fifoqueue {fifo_member_wait=nowait}user/${user_name} )"/>
@@ -267,7 +393,7 @@ Since the following dial plan will be used in the station, modify the internal c
   </extension>
 
   <!-- Agent logout extension: 6#[0-9] -->
-  <extension name="Agent Logout">
+  <extension name="FIFO Agent Logout">
     <condition field="destination_number" expression="^6(#|\*\*)(\d)">
       <action application="answer"/>
       <action application="set" data="result=${fifo_member(del fifoqueue {fifo_member_wait=nowait}user/${user_name})}"/>
@@ -303,34 +429,9 @@ When an agent dials 6#X from extension numbers 1001 and 1002, the following proc
 
 <br/><br/>
 
-## __fifo.conf.xml__
-<br/><br/>
-
-The two most important tasks remain. First, open the fifo.conf.xml file and create the FIFO queue name "fifoqueue" used in dialplan.
-<br/><br/>
-
-``` xml
-<configuration name="fifo.conf" description="FIFO Configuration">
-  <settings>
-    <param name="delete-all-outbound-member-on-startup" value="false"/>
-  </settings>
-  <fifos>
-    <fifo name="fifoqueue@$${domain}" importance="0">
-      <!-- <member timeout="60" simo="1" lag="20">{fifo_member_wait=wait}user/1001@$${domain}</member> -->
-    </fifo>
-    
-    <fifo name="cool_fifo@$${domain}" importance="0">
-      <!--<member timeout="60" simo="1" lag="20">{member_wait=nowait}user/1005@$${domain}</member>-->
-    </fifo>
-  </fifos>
-</configuration>
-
-```
-<br/><br/>
 
 
-
-# Test 
+# Test ring all FIFO Queue
 <br>
 Test with the following process.
 <br/><br/>

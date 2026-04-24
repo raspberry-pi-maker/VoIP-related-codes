@@ -13,7 +13,7 @@
 
 * [In Call IVR Service ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/incall_IVR_service.md). 
 
-* [Eavesdropping ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/eavesdropping.md). 
+* [Eavesdropping ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/eavesdropping.md)
 
 <br>
 
@@ -53,7 +53,7 @@
 
 <br>
 
-## mod_fifo
+## mod_fifo - FreeSWITCH module that provides Queue (First-In, First-Out) functionality
 
 * [Using mod_fifo](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/mod_fifo/README.md). 
 
