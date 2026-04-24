@@ -413,8 +413,7 @@ Since the following dial plan will be used in the station, modify the internal c
   </context>
 </include>
 ```
-
-<br/><br/>
+<br/>
 
 When an agent dials 6*X from extension numbers 1001 and 1002, the following process is performed. Prepare the ivr-you_are_now_logged_in.wav audio file in advance. 
 <br>
@@ -423,32 +422,37 @@ When an agent dials 6*X from extension numbers 1001 and 1002, the following proc
 * __Listen to the announcement ivr-you_are_now_logged_in.wav.__
 
 <br>
+
 When an agent dials 6#X from extension numbers 1001 and 1002, the following process is performed. Prepare the ivr-you_are_now_logged_out.wav audio file in advance.
 * __The extension phone leaves in the FIFO queue and can't receive a call coming into the fifoqueue any more.__
 * __Listen to the announcement ivr-you_are_now_logged_out.wav.__
 
 <br/><br/>
 
-
-
 # Test ring all FIFO Queue
-<br>
-Test with the following process.
-<br/><br/>
 
-* __Restart Freeswitch.__
-* __Check if stations 1001 and 1002 are registered in Freeswitch.__
-* __Dial 6*0 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive FIFO calls.__
-* __Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).__
-* __It should ring on both 1001 and 1002 extensions.__
-* __When one of the the ringing extensions receives a call, the sound source (exit-message.wav) is heard from the external phone.__
-* __A call is made between the agent and the customer (external phone).__
-* __Dial 1001 to 6#0. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_out.wav). Now, one station can receive FIFO calls.__
-* __Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).__
-* __From now on, only extension 1002 should ring.__
+<br>
+
+Test with the following process.
+
+<br/>
+
+* Restart Freeswitch.
+* Check if stations 1001 and 1002 are registered in Freeswitch.
+* Dial 6*0 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive FIFO calls.
+* Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).
+* It should ring on both 1001 and 1002 extensions.
+* When one of the the ringing extensions receives a call, the sound source (exit-message.wav) is heard from the external phone.
+* A call is made between the agent and the customer (external phone).
+* Dial 1001 to 6#0. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_out.wav). Now, one station can receive FIFO calls.
+* Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).
+* From now on, only extension 1002 should ring.
 
 <br/><br/>
 
 # Wrapping up
+
+<br/>
+
 In fact, an important part of FIFO is to make several calls at the same time and check whether they are connected to the agent in order.
 However, a typical call center does not use a method where all extensions ring at the same time for one inbound call. To distribute inbound calls to agents in a sophisticated manner, you must use mod_callcenter.
