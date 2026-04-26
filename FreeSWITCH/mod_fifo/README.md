@@ -1,3 +1,9 @@
+## [1.1.0] - 2026-04-26
+### Fixed
+- Updated to reflect that there is no difference between the ringall and enterprise methods in the FIFO module's outbound strategies.
+
+<br/><br/><br/>
+
 # Freeswitch Callcenter using mod_fifo
 
 FIFO stands for "First In, First Out". As calls enter the queue, they are arranged in order so that the call that has been in the queue for the longest time will be the first call to get answered. Generally FIFO call queues are used in "first come, first served" call scenarios such as customer service call centers.
@@ -247,6 +253,10 @@ mod_fifo has two operating modes depending on the configuration method, and the 
 
 <br/>
 
+There is a significant lack of official documentation regarding how mod_fifo works.
+The official website only introduces the Consumer Method (a method where the agent directly calls a specific number to intercept a call in the queue, rather than the system automatically calling the agent).
+
+
 1. Consumer Method (Picking the Call)
 
 This method allows agents (extensions) to directly call a specific number and "consume" a person waiting in the queue.
@@ -269,10 +279,7 @@ In this method, when a call enters the queue, it places the call to the extensio
 🚨 **Important Notes**
 
 The Consumer Method requires extension users to constantly monitor the FIFO queue to check if a call has entered the FIFO queue. Since it necessitates the use of display boards or applications to monitor the FIFO queue, it is inconvenient to use in practice. Therefore, most users utilize the Outbound Strategy in FreeSwitch, which makes calls to extensions.
-**And if you do not specify how the FIFO works, the FIFO uses ringall by default.**
 
-
-Open the fifo.conf.xml file and create the FIFO queue name "fifoqueue" used in dialplan.
 
 <br/>
 
@@ -313,6 +320,23 @@ And to pull calls from the FIFO queue, add a dial plan as follows.
 
 📌 **Outbound Strategy**
 
+<br/>
+
+If you perform an actual test, you can confirm that the round-robin method is applied in the enterprise mode, rather than the linear method.
+
+* linear method : Incoming FIFO calls are connected according to the extension order registered in the fifo.conf.xml file. The ring sounds starting from the lowest number every time. An excessive number of calls is concentrated on the lower numbers.
+
+* Round Robin: A sequential distribution method where if extensions a, b, and c are registered in that order, FIFO calls are distributed sequentially to a, b, and c.
+
+<br/>
+
+
+If you want to use the Outbound Strategy strategy, configure it as follows.
+
+Based on my testing,
+
+outbound_strategy="enterprise" or outbound_strategy="ringall" works identically. 
+Therefore, it works the same way even if you do not include the above values ​​in the FIFO settings.
 
 <br/>
 
@@ -322,131 +346,79 @@ And to pull calls from the FIFO queue, add a dial plan as follows.
     <param name="delete-all-outbound-member-on-startup" value="false"/>
   </settings>
   <fifos>
-    <fifo name="fifoqueue@$${domain}" importance="0">
-      <!-- <member timeout="60" simo="1" lag="20">{fifo_member_wait=wait}user/1001@$${domain}</member> -->
-    </fifo>
-  </fifos>
-</configuration>
-```
-<br/>
-
-The above configuration uses the ringall method because the FIFO operation method is not specified. You can also explicitly add outbound_strategy="ringall" as shown below.
-
-If you want to use the enterprise method, configure it as follows.
-
-``` xml
-<configuration name="fifo.conf" description="FIFO Configuration">
-  <settings>
-    <param name="delete-all-outbound-member-on-startup" value="false"/>
-  </settings>
-  <fifos>
-    <fifo name="fifoqueue@$${domain}" importance="0" outbound_strategy="enterprise">
+    <fifo name="fifoqueue" importance="0">
       <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1001@$${domain}</member>
       <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1002@$${domain}</member>
-      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1003@$${domain}</member>
     </fifo>
 
   </fifos>
 </configuration>
 ```
-<br/>
-
-In the above settings, the first call to arrive in the FIFO is always connected to 1001. If the connection fails due to no answer or being busy, the call is connected to 1002. Note that this is not a round-robin method.
-
-Members of a FIFO queue can be used statically as in the XML above, but they can also be dynamically joined or withdrawn from the FIFO queue by calling a specific number (6*x, 6#x) as shown below.
-
-<br/>
-
-
-## Extension Dialplan
-
-<br>
-
-The dial plan for extension calls is for FIFO entry and exit. It can be seen as similar to agent login and out.
-If you participate in FIFO, you can receive calls from the FIFO queue. And, if the FIFO queue is exited, calls entered in the FIFO queue cannot be distributed any more.
-
-Instead of the following dial plan, ESL (Event Socket Library) can be used for processing.
-I will use 6*X as the number for entering the FIFO and 6#X as the number for exiting the FIFO.
-Since the following dial plan will be used in the station, modify the internal context in the dialplan directory. 
-
 <br/><br/>
 
-``` xml
-<include>
-  <context name="default">
+# If you want to implement linear method call distrbution or ringall method
 
-  <!-- ...... -->
-  
-  <extension name="FIFO Agent Login">
-    <condition field="destination_number" expression="^6\*(\d)">
-      <action application="answer"/>
-      <action application="set" data="result=${fifo_member(add fifoqueue {fifo_member_wait=nowait}user/${user_name} )"/>
-      <!-- use the following line instead if you want to have group_confirm for the agent 
-    <action application="set" data="result=${fifo_member(add FIFO$1 {fifo_member_wait=nowait,group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1}user/${user_name} )"/>   
-      -->
+<br/>
 
-      <action application="log" data="INFO Add FIFO agent result: ${result}"/>
-      <action application="log" data="INFO User Login: fifoqueue User: ${user_name}"/>
-      <!-- No error checking, just assuming login went well... -->
-      <action application="playback" data="ivr-you_are_now_logged_in.wav"/>
+## linear method
+
+<br/>
+
+If you want to chain calls in a specific order using a linear method, you can implement it directly using a dial plan.
+
+
+```xml
+<extension name="FIFO_TEST">
+    <condition field="destination_number" expression="^(2001)$">
+        <action application="set" data="continue_on_fail=true"/>
+        <!-- If any of the dial plans are successfully bridged, the next dial plan is skipped. -->
+        <action application="set" data="hangup_after_bridge=true"/>
+        <action application="log" data="ALERT ====  SEQUENTIAL CALL START ==== "/>
+        
+        <action application="bridge" data="{call_timeout=10}user/1001@$${domain}"/>
+        <action application="bridge" data="{call_timeout=10}user/1002@$${domain}"/>
+        <action application="fifo" data="fifoqueue in"/>
     </condition>
-  </extension>
+</extension>
+```
 
-  <!-- Agent logout extension: 6#[0-9] -->
-  <extension name="FIFO Agent Logout">
-    <condition field="destination_number" expression="^6(#|\*\*)(\d)">
-      <action application="answer"/>
-      <action application="set" data="result=${fifo_member(del fifoqueue {fifo_member_wait=nowait}user/${user_name})}"/>
-      <!-- Use this line instead if you are using group_group confirm
-       <action application="set" data="result=${fifo_member(del FIFO$2 {fifo_member_wait=nowait,group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1}user/${user_name} )"/>
-       -->
+Attempt to bridge by explicitly fixing the order as shown above.
 
-      <action application="log" data="INFO Del FIFO agent result: ${result}"/>
-      <action application="log" data="INFO User Logout: fifoqueue User: ${user_name}"/>
-      <!-- No error checking, just assuming logout went well... -->
-      <action application="playback" data="ivr-you_are_now_logged_out.wav"/>
-    </condition>
-  </extension>
+Attempt to connect to 1001 first; if no connection is established within 10 seconds, attempt to connect to 1002.
 
-  ......
-  
-  </context>
-</include>
+If 1002 also fails to connect, enter the FIFO queue and wait.
+
+In this case, you must enter the member value in the FIFO settings like this.
+
+```xml
+    <fifo name="fifoqueue" importance="0">
+      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1001@$${domain}</member>
+      <member timeout="15" simo="1" lag="5">{call_timeout=30,fifo_member_wait=nowait}user/1002@$${domain}</member>
+    </fifo>
 ```
 <br/>
 
-When an agent dials 6*X from extension numbers 1001 and 1002, the following process is performed. Prepare the ivr-you_are_now_logged_in.wav audio file in advance. 
-<br>
-
-* __The extension phone participates in the FIFO queue to receive a call coming into the fifoqueue.__
-* __Listen to the announcement ivr-you_are_now_logged_in.wav.__
-
-<br>
-
-When an agent dials 6#X from extension numbers 1001 and 1002, the following process is performed. Prepare the ivr-you_are_now_logged_out.wav audio file in advance.
-* __The extension phone leaves in the FIFO queue and can't receive a call coming into the fifoqueue any more.__
-* __Listen to the announcement ivr-you_are_now_logged_out.wav.__
+## ringall method
 
 <br/><br/>
 
-# Test ring all FIFO Queue
-
-<br>
-
-Test with the following process.
-
-<br/>
-
-* Restart Freeswitch.
-* Check if stations 1001 and 1002 are registered in Freeswitch.
-* Dial 6*0 from extensions 1001 and 1002. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_in.wav). Now both stations can receive FIFO calls.
-* Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).
-* It should ring on both 1001 and 1002 extensions.
-* When one of the the ringing extensions receives a call, the sound source (exit-message.wav) is heard from the external phone.
-* A call is made between the agent and the customer (external phone).
-* Dial 1001 to 6#0. It is normal to listen to the pre-registered comment (ivr-you_are_now_logged_out.wav). Now, one station can receive FIFO calls.
-* Call 2001@192.168.150.128:5080 from an external phone (PhonerLite). It is normal to hear the sound source (music-on-hold.wav).
-* From now on, only extension 1002 should ring.
+```xml
+<extension name="RINGALL_ADVANCED">
+    <condition field="destination_number" expression="^(2001)$">
+        <action application="set" data="continue_on_fail=true"/>
+        <action application="set" data="hangup_after_bridge=true"/>    
+        <action application="set" data="ignore_early_media=true"/>
+        <action application="set" data="call_timeout=10"/>
+        
+        <!-- If bridge fails, answer and insert to fifo queue -->
+        <action application="bridge" data="user/1001@$${domain},user/1002@$${domain}"/>
+        
+        <action application="answer"/>
+        <action application="sleep" data="1000"/>
+        <action application="fifo" data="fifoqueue in"/>
+    </condition>
+</extension>
+```
 
 <br/><br/>
 
@@ -454,5 +426,21 @@ Test with the following process.
 
 <br/>
 
-In fact, an important part of FIFO is to make several calls at the same time and check whether they are connected to the agent in order.
-However, a typical call center does not use a method where all extensions ring at the same time for one inbound call. To distribute inbound calls to agents in a sophisticated manner, you must use mod_callcenter.
+```bash
+FreeSWITCH (Version 1.10.13-dev git 0e02cd4 2024-08-03 15:43:34Z 64bit) is ready
+```
+
+At least in the 1.10.13 version I am using, the ringall feature, which rings all phones, does not work.
+
+__It operates in only two ways:__
+
+* Consumer Method: A method where calls waiting in the FIFO queue are pulled from an extension.
+
+* Outbound Strategy: A method where calls are distributed to FIFO member extensions in a round-robin fashion, regardless of ringall or enterprise settings.
+
+
+Although ringall and linear call distribution methods do not work in FIFO, they can be easily implemented in a dial plan.
+In fact, the round-robin call distribution method provided by FIFO is generally a more useful approach.
+Depending on your needs, you can choose between the round-robin method provided by FIFO or a method where an extension picks up a FIFO waiting number.
+Alternatively, you can directly create ringall and linear call distribution methods within the dial plan.
+
