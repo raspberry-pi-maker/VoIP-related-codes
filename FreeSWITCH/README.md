@@ -16,7 +16,7 @@
 * [Eavesdropping ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/eavesdropping.md)
 
 
-* [Forwarding SIP Messages To Other Host ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/Forwarding_SIP_Messages.md)
+* [Forwarding SIP Messages To Other Host ](https://github.com/raspberry-pi-maker/VoIP-related-codes/blob/main/FreeSWITCH/Useful%20Scenario/Forwarding_SIP_messages.md)
 
 
 
