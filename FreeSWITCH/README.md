@@ -71,6 +71,8 @@
 
 * [recording with mod_callcenter](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/Recording%20with%20mod_callcenter). 
 
+* [recording with mod_siprec](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/Recording%20using%20mod_siprec). 
+
 <br>
 
 ## Video
