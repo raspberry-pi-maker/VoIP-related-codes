@@ -99,6 +99,8 @@ And this is an extension dial plan that connects valet parked calls from an exte
   </extension> 
 ```
 
+And this is a Lua script that implements both parking and pickup.
+
 ```lua
 --[[
 Test number : 07040005000
