@@ -230,7 +230,96 @@ a=sendonly
 
 <br>
 
-However, in version 1.34, the INVITE message is sent via a single stream (m=1).
+However, in version 1.34, the INVITE message is sent via a single stream (m=1). Looking at the SIPRERC call flow in the latter part, the siprec client sends an INVITE again (reinvite) at the time the actual call is made.
+The second INVITE should send an SDP in Dual stream (m=2) format to reflect that the call has been connected, but in v1.34, all data except the CSeq is sent as an INVITE identical to the first one.
+This part must be corrected.
+
+<br>
+
+📌 **SDP samples in INVITE, (reINVITE)**
+
+
+**First INVITE**
+
+```bash
+Content-Type: application/sdp
+v=0
+o=- 171 213 IN IP4 10.0.0.2
+s=-
+c=IN IP4 10.0.0.1
+t=0 0
+m=audio 6000 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+a=label:1
+
+Content-Type: application/rs-metadata+xml
+Content-Disposition: recording-session
+<?xml version='1.0' encoding='UTF-8'?>
+<recording xmlns='urn:ietf:params:xml:ns:recording'>
+        <dataMode>complete</dataMode>
+        <session id="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <start-time>2011-06-27T17:03:57</start-time>
+        </session>
+        <participant id="urn:uuid:10ac9063-76b7-40bb-4587-08ba290d7327" session="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <aor>sip:sipp@168.192.24.40</aor>
+                <name>sipp </name>
+                <send>urn:uuid:07868c77-ef8e-4d6f-6dd5-a02ff53a1329</send>
+                <start-time>2011-06-27T17:03:57</start-time>
+        </participant>
+        <participant id="urn:uuid:797c45f5-e765-4b12-52b0-d9be31138529" session="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <aor>sip:service@168.192.24.60</aor>
+                <name>sut </name>
+        </participant>
+        <stream id="urn:uuid:4a72a1ed-abb2-4d7c-5f4d-6d4c36e2d4ec" session="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <mode>separate</mode>
+                <start-time>2011-06-27T17:03:57</start-time>
+				<label>1</label>
+        </stream>
+</recording>
+```
+
+<br>
+
+**Second INVITE**
+
+```bash
+Content-Type: application/sdp
+v=0
+o=- 171 213 IN IP4 10.0.0.2
+s=-
+c=IN IP4 10.0.0.1
+t=0 0
+m=audio 6000 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+a=label:1
+m=audio 6002 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+a=label:2
+
+Content-Type: application/rs-metadata+xml
+Content-Disposition: recording-session
+<?xml version='1.0' encoding='UTF-8'?>
+<recording xmlns='urn:ietf:params:xml:ns:recording'>
+        <dataMode>partial</dataMode>
+        <session id="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <start-time>2011-06-27T17:03:57</start-time>
+        </session>
+        <participant id="urn:uuid:797c45f5-e765-4b12-52b0-d9be31138529" session="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <aor>sip:service@168.192.24.60</aor>
+                <name>sut </name>
+                <send>urn:uuid:4a72a1ed-abb2-4d7c-5f4d-6d4c36e2d4ec</send>
+                <start-time>2011-06-27T17:03:58</start-time>
+        </participant>
+        <stream id="urn:uuid:07868c77-ef8e-4d6f-6dd5-a02ff53a1329" session="urn:uuid:79b2fcd8-5c7f-455c-783f-db334e5d57d0">
+                <mode>separate</mode>
+                <start-time>2011-06-27T17:03:58</start-time>
+				<label>2</label>
+        </stream>
+</recording>
+```
+
+
+
 At first, I assumed that RX and TX were being sent as a single mixed stream. However, after examining the packets using tcpdump, I confirmed that 100 RTP packets were arriving per second. At ptime=20, 50 RX and 50 TX packets arrive. If they were mixed, only 50 should be arriving.
 
 Upon further investigation, I discovered that the RTP transmission port for mod_siprec was different.
@@ -417,6 +506,10 @@ simple_srs is a simple srs program created to test mod_siprec.
 It operates through the following process.
 
 ![status](./image/1.png)<br/>
+
+<div align="center">
+<a href="https://translate.google.co.kr">siprec Call flow from ORACLE</a>
+</div>
 
 <br>
 
