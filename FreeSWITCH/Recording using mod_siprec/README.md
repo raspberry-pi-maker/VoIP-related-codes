@@ -368,10 +368,17 @@ make mod_siprec-install
 ```bash
 cd /usr/local/src/freeswitch/src/mod/applications
 git clone https://github.com/voicetel/mod_siprec.git
-cd /usr/local/src/freeswitch/
-echo 'applications/mod_siprec' >> build/modules.conf.in
-./bootstrap.sh && ./configure
-make mod_siprec-install CC="gcc -Wno-error=declaration-after-statement"
+cd src/mod/applications/mod_siprec
+
+gcc -fPIC -DPIC -I/usr/include/uuid -I/usr/local/src/freeswitch/src/include \
+    -I/usr/local/src/freeswitch/libs/libteletone/src -g -O2 \
+    -Wno-error=declaration-after-statement \
+    -c mod_siprec.c siprec_invite.c recording_session.c siprec_sdp.c siprec_metadata.c siprec_media.c
+
+gcc -shared -fPIC \
+    -o mod_siprec.so \
+    mod_siprec.o siprec_invite.o recording_session.o siprec_sdp.o siprec_metadata.o siprec_media.o -luuid
+cp mod_siprec.so  /usr/local/freeswitch/mod/
 ```
 
 <br>
