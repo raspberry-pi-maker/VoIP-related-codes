@@ -58,6 +58,75 @@ To use mod_valetpark properly, you need to identify cars parked in parking slots
 
 <br><br>
 
+# valet_park API
+
+<br>
+
+## application
+
+<br>
+
+| Application |  Purpose  | Arguments  |
+| --- |  --- | --- |
+| valet_park |  Park or retrieve a call in a named lot. |<lotname> <extension> or <lotname> ask [<min>] [<max>] [<timeout_ms>] [<prompt>] or <lotname> auto in|out <min> <max> |
+
+<br>
+
+## Extension Argument Modes
+
+<br>
+
+| Mode |  Syntax  | Behavior  |
+| --- |  --- | --- |
+|Explicit |  <lotname> <extension> | Park at the specified extension; if a parked call already exists at that extension and is unbridged, retrieve and bridge to it. |
+|Ask | <lotname> ask [<min>] [<max>] [<timeout_ms>] [<prompt>] | Play a prompt and collect DTMF from the caller to determine the extension number. |
+| Auto-in |  <lotname> auto in <min> <max> | Automatically assign the lowest available extension in the range <min> to <max> and park the call. Announces the assigned slot to the caller. |
+| Auto-out |  <lotname> auto out <min> <max> | Retrieve the longest-waiting parked call in the range <min> to <max>. |
+
+<br>
+
+## ask Mode Fallback Channel Variables
+
+<br>
+
+When arguments to ask mode are omitted, valet_park reads the following channel variables as defaults. Positional arguments take precedence over channel variables.
+
+| Variable |  Purpose  | Default if absent  |
+| --- |  --- | --- |
+| valet_ext_min |  Minimum DTMF digit count for extension entry | 1 |
+| valet_ext_max |  Maximum DTMF digit count for extension entry | 11 |
+| valet_ext_to |  DTMF collection timeout in milliseconds | 10000 |
+| valet_ext_prompt |  Sound file to play as the extension entry prompt | ivr/ivr-enter_ext_pound.wav |
+
+
+<br>
+
+## Channel Variables Honored by valet_park
+
+<br>
+
+| Variable |  Purpose  | 
+| --- |  --- |
+| valet_hold_music |  Hold music to play while parked. Falls back to the channel's configured hold music. |
+| valet_announce_slot |  Set to false to suppress the slot announcement in auto in mode. Default: true. |
+| valet_parking_timeout |  Seconds before the parked call is transferred to the orbit extension. |
+| valet_parking_orbit_exten |  Extension to transfer to on parking timeout. |
+| valet_parking_orbit_dialplan |  Dialplan to use for the orbit transfer. |
+| valet_parking_orbit_context |  Context to use for the orbit transfer. |
+| valet_parking_orbit_exit_key |  DTMF digit that immediately triggers the orbit transfer. |
+
+<br>
+
+## Channel Variables Set by valet_park
+
+<br>
+
+| Variable |  Value  | 
+| --- |  --- |
+| valet_lot_extension |  The extension number at which this channel is parked. |
+
+<br><br>
+
 # Dialplan
 
 <br>
