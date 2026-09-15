@@ -172,16 +172,18 @@ And this is an extension dial plan that connects valet parked calls from an exte
 ## scenario scripts
 
 The valet_park application handles both parking and pickup requests.
-A parking request is cleared from the application based on the following three conditions:
+A parking request is cleared from the application based on the following four conditions:
 
 * The time specified in `valet_parking_timeout` has been exceeded.
+* The exit DTMF was received.
 * The call is picked up from another call.
 * The current `valet_park` application is forcibly terminated using `uuid_break`.
 
-
+<br>
 
 And this is a Lua script that implements both parking and pickup.
 
+<br>
 
 ```lua
 --[[
@@ -329,3 +331,61 @@ In lua, the lot name and slot number of the parking slot are fixed as "my_lot 70
 
 Valet parking is not a function that is used often, but it can be very useful in some cases.
 Although it is not a call center, a place that must handle consultation calls can use an electronic signboard to provide information about parking calls and provide a function where available employees can pick up the call and provide consultation.
+
+If you need to handle post-processing after a bridged call using the valet_park application, it is recommended to use event hooking.
+
+<br>
+
+Add hooking to the lua.conf.xml file as follows.
+
+```xml
+<!-- lua.conf.xml -->
+<hook event="CHANNEL_HANGUP_COMPLETE" script="valet_hookprogress.lua"/>
+```
+
+<br>
+
+And before calling the `valet_park` function, add a session variable as follows.
+To ensure that my channel also terminates immediately when the other party hangs up, I also set the `hangup_after_bridge` variable.
+
+```lua
+  session:setVariable("hangup_after_bridge", "true")
+  session:setVariable("valet_parking_need_disconnect", "true")
+  session:execute("valet_park", "my_lot 7001");
+```
+
+<br>
+
+Then, create the `valet_hookprogress.lua` file as follows.
+
+```lua
+-- valet_hookprogress.lua
+fs_api = freeswitch.API()
+name = event:getHeader("Event-Name")
+if name == "CHANNEL_HANGUP_COMPLETE" then
+    local uuid = event:getHeader("variable_uuid") or event:getHeader("Unique-ID")
+    local dnis = event:getHeader("variable_sip_to_user") or event:getHeader("Caller-Destination-Number") or ""
+    local ani = event:getHeader("Caller-ANI") or event:getHeader("variable_sip_from_user") or ""
+    local need_feedback = event:getHeader("variable_valet_parking_need_disconnect") or ""
+    if need_feedback == "true" then --Add the necessary code here.
+        local created_epoch = event:getHeader("variable_created_epoch") or "0"
+        local bridge_epoch = event:getHeader("variable_bridge_epoch") or "0"
+        local end_epoch = event:getHeader("variable_end_epoch") or "0"
+        local is_bridged = false
+        local talk_time_sec = 0
+
+        if bridge_epoch ~= "0" then
+            is_bridged = true
+            talk_time_sec = tonumber(end_epoch) - tonumber(bridge_epoch)
+        end
+        local billsec = event:getHeader("variable_billsec") or "0"
+        freeswitch.consoleLog("ALERT", string.format("HOOK_PROGRESS  ani[%s] dnis[%s] uuid[%s] \n", ani, dnis, uuid));
+        freeswitch.consoleLog("ALERT", string.format(
+            "=== [%s] Call End | Conn Success:%s | duration:%s sec | talk:%d sec | billsec:%s sec | ANI:%s | DNIS:%s ===\n", 
+            need_feedback, tostring(is_bridged), total_call_time, talk_time_sec, billsec, ani, dnis
+        ))
+
+  end
+end
+
+```
