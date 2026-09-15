@@ -167,8 +167,21 @@ And this is an extension dial plan that connects valet parked calls from an exte
     </condition>
   </extension> 
 ```
+<br>
+
+## scenario scripts
+
+The valet_park application handles both parking and pickup requests.
+A parking request is cleared from the application based on the following three conditions:
+
+* The time specified in `valet_parking_timeout` has been exceeded.
+* The call is picked up from another call.
+* The current `valet_park` application is forcibly terminated using `uuid_break`.
+
+
 
 And this is a Lua script that implements both parking and pickup.
+
 
 ```lua
 --[[
@@ -247,7 +260,7 @@ function pickup()
       -- If slot_number exists in the status string (e.g., "<7001> ...")
       if status and string.find(status, slot_number) then
           freeswitch.consoleLog("warning", "--- [Parking] A exists. Attempting connection: " .. ext_number .. " ---\n");
-          session:execute("valet_park", lot_name .. " " .. slot_number);
+          session:execute("valet_park", lot_name .. " " .. slot_number);    --The `valet_park` function terminates the moment the bridge is established.
       else
           -- 2. Handle case where A has already hung up or slot is empty
           freeswitch.consoleLog("warning", "--- [Parking] Slot " .. slot_number .. " is empty. Ending call.---\n");
@@ -272,8 +285,14 @@ function park()
       -- Park into slot 7001 of lot named 'my_lot'
       -- valet_park [lot_name] [slot_number]
       session:execute("valet_park", "my_lot 7001");
-      session:sleep(500)
   end
+  if session:ready() then
+    --uuid_break or valet_parking_timeout is reached
+  else
+    --picked up or caller hangs up the call
+  end
+
+
 end
 
 
