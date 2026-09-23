@@ -58,6 +58,75 @@ To use mod_valetpark properly, you need to identify cars parked in parking slots
 
 <br><br>
 
+# valet_park API
+
+<br>
+
+## application
+
+<br>
+
+| Application |  Purpose  | Arguments  |
+| --- |  --- | --- |
+| valet_park |  Park or retrieve a call in a named lot. |<lotname> <extension> or <lotname> ask [<min>] [<max>] [<timeout_ms>] [<prompt>] or <lotname> auto in|out <min> <max> |
+
+<br>
+
+## Extension Argument Modes
+
+<br>
+
+| Mode |  Syntax  | Behavior  |
+| --- |  --- | --- |
+|Explicit |  <lotname> <extension> | Park at the specified extension; if a parked call already exists at that extension and is unbridged, retrieve and bridge to it. |
+|Ask | <lotname> ask [<min>] [<max>] [<timeout_ms>] [<prompt>] | Play a prompt and collect DTMF from the caller to determine the extension number. |
+| Auto-in |  <lotname> auto in <min> <max> | Automatically assign the lowest available extension in the range <min> to <max> and park the call. Announces the assigned slot to the caller. |
+| Auto-out |  <lotname> auto out <min> <max> | Retrieve the longest-waiting parked call in the range <min> to <max>. |
+
+<br>
+
+## ask Mode Fallback Channel Variables
+
+<br>
+
+When arguments to ask mode are omitted, valet_park reads the following channel variables as defaults. Positional arguments take precedence over channel variables.
+
+| Variable |  Purpose  | Default if absent  |
+| --- |  --- | --- |
+| valet_ext_min |  Minimum DTMF digit count for extension entry | 1 |
+| valet_ext_max |  Maximum DTMF digit count for extension entry | 11 |
+| valet_ext_to |  DTMF collection timeout in milliseconds | 10000 |
+| valet_ext_prompt |  Sound file to play as the extension entry prompt | ivr/ivr-enter_ext_pound.wav |
+
+
+<br>
+
+## Channel Variables Honored by valet_park
+
+<br>
+
+| Variable |  Purpose  | 
+| --- |  --- |
+| valet_hold_music |  Hold music to play while parked. Falls back to the channel's configured hold music. |
+| valet_announce_slot |  Set to false to suppress the slot announcement in auto in mode. Default: true. |
+| valet_parking_timeout |  Seconds before the parked call is transferred to the orbit extension. |
+| valet_parking_orbit_exten |  Extension to transfer to on parking timeout. |
+| valet_parking_orbit_dialplan |  Dialplan to use for the orbit transfer. |
+| valet_parking_orbit_context |  Context to use for the orbit transfer. |
+| valet_parking_orbit_exit_key |  DTMF digit that immediately triggers the orbit transfer. |
+
+<br>
+
+## Channel Variables Set by valet_park
+
+<br>
+
+| Variable |  Value  | 
+| --- |  --- |
+| valet_lot_extension |  The extension number at which this channel is parked. |
+
+<br><br>
+
 # Dialplan
 
 <br>
@@ -98,8 +167,23 @@ And this is an extension dial plan that connects valet parked calls from an exte
     </condition>
   </extension> 
 ```
+<br>
+
+## scenario scripts
+
+The valet_park application handles both parking and pickup requests.
+A parking request is cleared from the application based on the following four conditions:
+
+* The time specified in `valet_parking_timeout` has been exceeded.
+* The exit DTMF was received.
+* The call is picked up from another call.
+* The current `valet_park` application is forcibly terminated using `uuid_break`.
+
+<br>
 
 And this is a Lua script that implements both parking and pickup.
+
+<br>
 
 ```lua
 --[[
@@ -178,7 +262,7 @@ function pickup()
       -- If slot_number exists in the status string (e.g., "<7001> ...")
       if status and string.find(status, slot_number) then
           freeswitch.consoleLog("warning", "--- [Parking] A exists. Attempting connection: " .. ext_number .. " ---\n");
-          session:execute("valet_park", lot_name .. " " .. slot_number);
+          session:execute("valet_park", lot_name .. " " .. slot_number);    --The `valet_park` function terminates the moment the bridge is established.
       else
           -- 2. Handle case where A has already hung up or slot is empty
           freeswitch.consoleLog("warning", "--- [Parking] Slot " .. slot_number .. " is empty. Ending call.---\n");
@@ -203,8 +287,14 @@ function park()
       -- Park into slot 7001 of lot named 'my_lot'
       -- valet_park [lot_name] [slot_number]
       session:execute("valet_park", "my_lot 7001");
-      session:sleep(500)
   end
+  if session:ready() then
+    --uuid_break or valet_parking_timeout is reached
+  else
+    --picked up or caller hangs up the call
+  end
+
+
 end
 
 
@@ -241,3 +331,61 @@ In lua, the lot name and slot number of the parking slot are fixed as "my_lot 70
 
 Valet parking is not a function that is used often, but it can be very useful in some cases.
 Although it is not a call center, a place that must handle consultation calls can use an electronic signboard to provide information about parking calls and provide a function where available employees can pick up the call and provide consultation.
+
+If you need to handle post-processing after a bridged call using the valet_park application, it is recommended to use event hooking.
+
+<br>
+
+Add hooking to the lua.conf.xml file as follows.
+
+```xml
+<!-- lua.conf.xml -->
+<hook event="CHANNEL_HANGUP_COMPLETE" script="valet_hookprogress.lua"/>
+```
+
+<br>
+
+And before calling the `valet_park` function, add a session variable as follows.
+To ensure that my channel also terminates immediately when the other party hangs up, I also set the `hangup_after_bridge` variable.
+
+```lua
+  session:setVariable("hangup_after_bridge", "true")
+  session:setVariable("valet_parking_need_disconnect", "true")
+  session:execute("valet_park", "my_lot 7001");
+```
+
+<br>
+
+Then, create the `valet_hookprogress.lua` file as follows.
+
+```lua
+-- valet_hookprogress.lua
+fs_api = freeswitch.API()
+name = event:getHeader("Event-Name")
+if name == "CHANNEL_HANGUP_COMPLETE" then
+    local uuid = event:getHeader("variable_uuid") or event:getHeader("Unique-ID")
+    local dnis = event:getHeader("variable_sip_to_user") or event:getHeader("Caller-Destination-Number") or ""
+    local ani = event:getHeader("Caller-ANI") or event:getHeader("variable_sip_from_user") or ""
+    local need_feedback = event:getHeader("variable_valet_parking_need_disconnect") or ""
+    if need_feedback == "true" then --Add the necessary code here.
+        local created_epoch = event:getHeader("variable_created_epoch") or "0"
+        local bridge_epoch = event:getHeader("variable_bridge_epoch") or "0"
+        local end_epoch = event:getHeader("variable_end_epoch") or "0"
+        local is_bridged = false
+        local talk_time_sec = 0
+
+        if bridge_epoch ~= "0" then
+            is_bridged = true
+            talk_time_sec = tonumber(end_epoch) - tonumber(bridge_epoch)
+        end
+        local billsec = event:getHeader("variable_billsec") or "0"
+        freeswitch.consoleLog("ALERT", string.format("HOOK_PROGRESS  ani[%s] dnis[%s] uuid[%s] \n", ani, dnis, uuid));
+        freeswitch.consoleLog("ALERT", string.format(
+            "=== [%s] Call End | Conn Success:%s | duration:%s sec | talk:%d sec | billsec:%s sec | ANI:%s | DNIS:%s ===\n", 
+            need_feedback, tostring(is_bridged), total_call_time, talk_time_sec, billsec, ani, dnis
+        ))
+
+  end
+end
+
+```
