@@ -253,8 +253,15 @@ If there are no issues with settings such as the firewall, the audio file you cr
 
 ```
 
+<br>
+
+If you use sngrep to inspect SIP packets, the call should be established as follows for it to be considered normal. The INVITE message will display information as shown below. The boxed area indicates the part where the address was changed to a public IP due to the use of a STUN server.
+
+![config](./image/4.png)
+
+And if you terminate the call, you can also verify the handling of the BYE message.
 
 <br>
 
-
+![config](./image/5.png)
 
