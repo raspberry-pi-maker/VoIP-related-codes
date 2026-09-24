@@ -1,59 +1,143 @@
-# SIPp Overview
+# Overview
 
-<br>
-
-* SIPp is an open‑source test tool and traffic generator for the SIP (Session Initiation Protocol) used in VoIP systems.
-* It can simulate thousands of concurrent SIP calls to test performance, scalability, and reliability of SIP servers, proxies, and gateways.
-
-* Features include:
-
-* * Predefined call scenarios (e.g., UAC, UAS, registration, etc.)
-
-* * Custom XML scenario scripting for flexible test cases
-
-* * Support for TCP, UDP, TLS, and IPv6
-
-* * Ability to measure response times, call setup rates, and stress test SIP infrastructure
-
-* Widely used by developers, QA engineers, and telecom operators to validate VoIP solutions under real‑world traffic conditions.
+One of the most important use cases for SIPp is generating high volumes of traffic to perform load testing on SIP servers, such as PBX systems.
+This article examines a scenario that generates a large volume of SIP traffic directed at a target PBX for this purpose.
 
 <br><br>
 
-# SIPp install
+# Basic Outbound
+
+<br>
+
+
+This SIPp scenario defines a basic UAC (User Agent Client) call flow that includes audio playback using a PCAP file.
+Here is a brief breakdown of the workflow:
+
+1. Call Setup: Sends an INVITE request with SDP information to initiate the call and waits for a 200 OK response (ignoring optional 100/180 provisional responses).
+2. ACK & Media Playback: Sends an ACK to establish the session and immediately triggers the play_pcap_audio="a.pcap" action within a <nop> tag to start playing the audio file.
+3. Call Duration: Uses a <pause> tag set to 10,000 milliseconds (10 seconds) to keep the call connected while the PCAP audio is playing.
+4. Call Teardown: Sends a BYE request to hang up the call and waits to receive a final 200 OK response to properly close the session.
+
+<br>
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<scenario name="UAC with PCAP Play">
+  
+  <!-- 1. Send INVITE -->
+  <send retrans="500">
+    <![CDATA[
+      INVITE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: sipp <sip:sipp@[local_ip]:[local_port]>;tag=[pid]SIPpTag00[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>
+      Call-ID: [call_id]
+      CSeq: 1 INVITE
+      Contact: sip:sipp@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: PCAP Play Test
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=user1 53655765 2353687637 IN IP[local_ip_type] [local_ip]
+      s=-
+      c=IN IP[local_ip_type] [local_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 0
+      a=rtpmap:0 PCMU/8000
+    ]]>
+  </send>
+
+  <recv response="100" optional="true"></recv>
+  <recv response="180" optional="true"></recv>
+  <recv response="200" rtd="true"></recv>
+
+  <!-- 2. Send ACK and start playing PCAP file -->
+  <send>
+    <![CDATA[
+      ACK sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: sipp <sip:sipp@[local_ip]:[local_port]>;tag=[pid]SIPpTag00[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 1 ACK
+      Contact: sip:sipp@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: PCAP Play Test
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <nop>
+    <action>
+      <!-- Play a.pcap file -->
+      <exec play_pcap_audio="a.pcap"/>
+    </action>
+  </nop>
+
+  <!-- 3. Pause for the duration of the PCAP play (e.g., set 10000ms for a 10-second play) -->
+  <pause milliseconds="10000"/>
+
+  <!-- 4. Send BYE to terminate the call -->
+  <send retrans="500">
+    <![CDATA[
+      BYE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: sipp <sip:sipp@[local_ip]:[local_port]>;tag=[pid]SIPpTag00[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 2 BYE
+      Contact: sip:sipp@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: PCAP Play Test
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <recv response="200" crlf="true"></recv>
+
+</scenario>
+```
+
+<br>
+
+If you want to make 100 outbound calls simultaneously, you can use the `sipp` command as follows.
 
 <br>
 
 ```bash
-sudo dnf update -y
-sudo dnf install -y epel-release
-sudo dnf config-manager --set-enabled crb
-
-# Install essential build tools and libraries.
-sudo dnf install -y git cmake make gcc-c++ \
-    ncurses-devel \
-    openssl-devel \
-    libpcap-devel \
-    lksctp-tools-devel \
-    gsl-devel
-
-# Change working directory and clone source
-cd /usr/local/src
-sudo git clone https://github.com/SIPp/sipp.git
-cd sipp
-
-# Initialize submodules (synchronize necessary files such as GTest)
-sudo git submodule update --init
-
-# TGenerate a Makefile including TLS, PCAP, SCTP, and GSL functionality.
-sudo cmake . -DUSE_SSL=1 -DUSE_PCAP=1 -DUSE_SCTP=1 -DUSE_GSL=1
-# compile
-sudo make
-
-# Copy to the /usr/local/bin directory so that it can be used regardless of the path.
-cp sipp /usr/local/bin
+sipp [Target_IP]:[port] -sf uac_pcap.xml -s [destination_number] -m 100 -l 100 -r 100
 ```
 
-<br><br>
+<br>
+
+The -m 100, -l 100, and -r 100 options have the following meanings.
+
+### -m [number]
+
+* Specifies the total number of calls.
+* Example: -m 100 → Generates a total of 100 calls and then terminates. If you want to re-send calls after they finish to test a total of 1,000 calls, simply change this value to 1,000.   
+
+### -l [number]
+
+* Limits the maximum number of concurrent calls.
+* Example: -l 100 → Maintains a maximum of 100 concurrent calls.
+* If -m is 1000 and -l is 100, no new calls are initiated while 100 calls are in progress; the next call begins only after an existing call completes.
+
+### -r [number]
+
+* Specifies the call generation rate (Calls per Second, CPS).
+* Example: -r 100 → Generates 100 calls per second. Since this value is 100, 100 calls are sent simultaneously.
+
+The method for creating pcap audio files was explained in [SIPp overview and Implementing SIPp Inbound Services in a NAT Environment ](https://example.com)
+
+
+<br>
+
+
+
 
 # Testing SIPp in a NAT environment
 
@@ -156,7 +240,8 @@ If SIPp interacts with a device located on the same host or within the internal 
   <!-- 1. Receive initial INVITE -->
   <recv request="INVITE" />
 
-  <!-- 2. Send initial 200 OK -->
+  <!-- 2. Send initial 200 OK
+    retrans means...  After sending the message, it is retransmitted at 500ms intervals.-->
   <send retrans="500">
     <![CDATA[
       SIP/2.0 200 OK
@@ -264,4 +349,58 @@ And if you terminate the call, you can also verify the handling of the BYE messa
 <br>
 
 ![config](./image/5.png)
+
+<br>
+
+## Add IP Authentication
+
+<br>
+
+If you run SIPp as a daemon program, IP authentication for incoming trunk calls may be required.
+In this case, you can add the following ACL information to the XML file using a regular expression.
+The XML below uses a regular expression to validate the IP address; if the condition is met, it sends a ring signal, and otherwise, it terminates the call.
+
+```xml
+<!-- Receive INVITE and check IP -->
+<recv request="INVITE">
+  <action>
+    <!-- Check if the allowed IP (e.g., 192.168.1.50) exists in the Via header and save the result to the 'ip_matched' variable -->
+    <ereg regexp="192\.168\.1\.50" search_in="hdr" header="Via:" assign_to="ip_matched"/>
+  </action>
+</recv>
+<!-- If the regular expression matches (allowed IP), jump to the 'accept_invite' label -->
+
+<nop next="accept_invite" test="ip_matched"/>
+<!-- If the regular expression does not match (disallowed IP), respond with 403 Forbidden -->
+<send>
+  <![CDATA[
+    SIP/2.0 403 Forbidden
+    [last_Via:]
+    [last_From:]
+    [last_To:];tag=[pid]SIPpTag01[call_number]
+    [last_Call-ID:]
+    [last_CSeq:]
+    Content-Length: 0
+  ]]>
+</send>
+<!-- Jump to the call termination label -->
+<nop next="end_call"/>
+
+ <!-- === Allowed IP processing area === -->
+
+<label id="accept_invite"/>
+<send>
+  <![CDATA[
+    SIP/2.0 180 Ringing
+    [last_Via:]
+    [last_From:]
+    [last_To:];tag=[pid]SIPpTag01[call_number]
+    [last_Call-ID:]
+    [last_CSeq:]
+    Content-Length: 0
+  ]]>
+</send>
+```
+
+
 
