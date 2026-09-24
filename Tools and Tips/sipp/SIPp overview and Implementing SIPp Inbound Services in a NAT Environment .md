@@ -498,6 +498,82 @@ And if you terminate the call, you can also verify the handling of the BYE messa
 
 ![config](./image/5.png)
 
+<br><br>
+
+# Tips
+
+<br>
+
+## Handling Public IP Variables
+
+<br>
+
+In the previous XML file, the public IP address was entered directly in the format X.X.139.21.
+However, this approach lacks scalability and is inconvenient, as the XML file must be modified every time the host being tested changes.
+
+You can use the keyword `public_ip` in the XML file and assign a value to it in the `sipp` command.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario name="UAS Loop Media">
+
+  <!-- 1. Receive initial INVITE -->
+  <recv request="INVITE" />
+
+  <!-- 2. Send initial 200 OK -->
+  <send retrans="500">
+    <![CDATA[
+      SIP/2.0 200 OK
+      [last_Via:]
+      [last_From:]
+      [last_To:];tag=[pid]SIPpTag[call_number]
+      [last_Call-ID:]
+      [last_CSeq:]
+      Contact: <sip:[public_ip]:[local_port]>
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=user1 53655765 2353687637 IN IP4 [public_ip]
+      s=SIPp
+      c=IN IP4 [public_ip]
+      t=0 0
+      m=audio [auto_media_port] RTP/AVP 0
+      a=rtpmap:0 PCMU/8000
+    ]]>
+  </send>
+
+  <!-- 3. Receive initial ACK -->
+  <recv request="ACK" />
+
+  <!-- Start media playback loop -->
+  <label id="play_media" />
+  <nop>
+    <action>
+      <exec play_pcap_audio="/usr/local/src/sipp/pcap/music_pcmu.pcap"/>
+    </action>
+  </nop>
+
+  <!-- 4. Wait for BYE. If Re-INVITE arrives, branch to 'handle_reinvite' -->
+  <recv request="INVITE" optional="true" next="handle_reinvite" />
+  <recv request="BYE" timeout="10000" ontimeout="play_media" next="call_end" />
+
+  <!-- 5. Normal call termination -->
+  <label id="call_end"/>
+  <send next="end_scenario">
+</scenario>
+
+```
+
+<br>
+
+When executing the command, use the -key option to inject the public IP value into the public_ip variable. You can assign a value to `public_ip` in the `sipp` command as follows.
+
+```bash
+sipp -sf uas_media.xml -key public_ip X.X.139.21 -i 10.10.10.10 -mi 10.10.10.10 -p 5080 -mp 100001:10000
+
+```
+
 <br>
 
 ## Add IP Authentication

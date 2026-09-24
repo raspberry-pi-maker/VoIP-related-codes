@@ -47,16 +47,16 @@ To maintain distinct RTP ports while simultaneously creating two or more calls, 
       To: <sip:[service]@[remote_ip]:[remote_port]>
       Call-ID: [call_id]
       CSeq: 1 INVITE
-      Contact: sip:sipp@X.X.209.67:[local_port]
+      Contact: sip:sipp@[public_ip]:[local_port]
       Max-Forwards: 70
       Subject: PCAP Play Test
       Content-Type: application/sdp
       Content-Length: [len]
 
       v=0
-      o=user1 53655765 2353687637 IN IP[local_ip_type] X.X.209.67
+      o=user1 53655765 2353687637 IN IP[local_ip_type] [public_ip]
       s=-
-      c=IN IP[local_ip_type] X.X.209.67
+      c=IN IP[local_ip_type] [public_ip]
       t=0 0
       m=audio [auto_media_port] RTP/AVP 0
       a=rtpmap:0 PCMU/8000
@@ -76,7 +76,7 @@ To maintain distinct RTP ports while simultaneously creating two or more calls, 
       To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
       Call-ID: [call_id]
       CSeq: 1 ACK
-      Contact: sip:sipp@X.X.209.67:[local_port]
+      Contact: sip:sipp@[public_ip]:[local_port]
       Max-Forwards: 70
       Subject: PCAP Play Test
       Content-Length: 0
@@ -102,7 +102,7 @@ To maintain distinct RTP ports while simultaneously creating two or more calls, 
       To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
       Call-ID: [call_id]
       CSeq: 2 BYE
-      Contact: sip:sipp@X.X.209.67:[local_port]
+      Contact: sip:sipp@[public_ip]:[local_port]
       Max-Forwards: 70
       Subject: PCAP Play Test
       Content-Length: 0
@@ -121,7 +121,7 @@ If you want to make 100 outbound calls simultaneously, you can use the `sipp` co
 <br>
 
 ```bash
-sipp [Target_IP]:[port] -sf uac_pcap.xml -s [destination_number] -m 100 -l 100 -r 100
+sipp [Target_IP]:[port] -sf uac_pcap.xml -key public_ip X.X.209.67 -s [destination_number] -m 100 -l 100 -r 100
 ```
 
 <br>
