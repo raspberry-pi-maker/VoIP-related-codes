@@ -188,6 +188,10 @@ SIPp offers a wide range of features through a vast array of available options. 
 
 <br>
 
+## Rocky9 build
+
+<br>
+
 ```bash
 sudo dnf update -y
 sudo dnf install -y epel-release
@@ -210,7 +214,60 @@ cd sipp
 sudo git submodule update --init
 
 # TGenerate a Makefile including TLS, PCAP, SCTP, and GSL functionality.
-sudo cmake . -DUSE_SSL=1 -DUSE_PCAP=1 -DUSE_SCTP=1 -DUSE_GSL=1
+sudo cmake . -DUSE_PCAP=1 -DUSE_SCTP=1 -DUSE_GSL=1
+# compile
+sudo make
+
+# Copy to the /usr/local/bin directory so that it can be used regardless of the path.
+cp sipp /usr/local/bin
+```
+
+<br>
+
+## Rocky8 build
+
+<br>
+
+```bash
+sudo dnf update -y
+sudo dnf install -y epel-release
+udo dnf config-manager --set-enabled powertools
+
+# Install essential build tools and libraries.
+sudo dnf install -y git cmake make gcc gcc-c++ \
+    ncurses-devel \
+    openssl-devel \
+    libpcap-devel \
+    lksctp-tools-devel \
+    gsl-devel
+
+cat <<EOF | sudo tee /usr/lib64/pkgconfig/sctp.pc
+prefix=/usr
+exec_prefix=\${prefix}
+libdir=/usr/lib64
+includedir=/usr/include
+
+Name: SCTP
+Description: SCTP library
+Version: 1.0
+Libs: -L\${libdir} -lsctp
+Cflags: -I\${includedir}
+EOF
+
+export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
+pkg-config --libs sctp
+
+
+# Change working directory and clone source
+cd /usr/local/src
+sudo git clone https://github.com/SIPp/sipp.git
+cd sipp
+
+# Initialize submodules (synchronize necessary files such as GTest)
+sudo git submodule update --init
+
+# TGenerate a Makefile including TLS, PCAP, SCTP, and GSL functionality.
+sudo cmake . -DUSE_PCAP=1 -DUSE_SCTP=1 -DUSE_GSL=1  -DCMAKE_EXE_LINKER_FLAGS="-lsctp -lgsl -lgslcblas"
 # compile
 sudo make
 
@@ -312,17 +369,17 @@ This XML includes information on the audio file to be played upon connection (th
 It also contains the public IP address (X.X.139.21) of the host where SIPp is running. When SIPp operates in a NAT environment, private IP information is not required.
 If SIPp interacts with a device located on the same host or within the internal network, use a private IP address instead of a public IP address.
 
+
 <br>
 
 ```xml
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <scenario name="UAS Loop Media">
 
   <!-- 1. Receive initial INVITE -->
   <recv request="INVITE" />
 
-  <!-- 2. Send initial 200 OK
-    retrans means...  After sending the message, it is retransmitted at 500ms intervals.-->
+  <!-- 2. Send initial 200 OK -->
   <send retrans="500">
     <![CDATA[
       SIP/2.0 200 OK
@@ -331,16 +388,16 @@ If SIPp interacts with a device located on the same host or within the internal 
       [last_To:];tag=[pid]SIPpTag[call_number]
       [last_Call-ID:]
       [last_CSeq:]
-      Contact: <sip:X.X.139.21:[local_port]>
+      Contact: <sip:49.50.139.21:[local_port]>
       Content-Type: application/sdp
       Content-Length: [len]
 
       v=0
-      o=user1 53655765 2353687637 IN IP4 X.X.139.21
+      o=user1 53655765 2353687637 IN IP4 49.50.139.21
       s=SIPp
-      c=IN IP4 X.X.139.21
+      c=IN IP4 49.50.139.21
       t=0 0
-      m=audio [media_port] RTP/AVP 0
+      m=audio [auto_media_port] RTP/AVP 0
       a=rtpmap:0 PCMU/8000
     ]]>
   </send>
@@ -354,6 +411,16 @@ If SIPp interacts with a device located on the same host or within the internal 
     <action>
       <exec play_pcap_audio="/usr/local/src/sipp/pcap/music_pcmu.pcap"/>
     </action>
+  </nop>
+
+  <!-- 4. Wait for BYE. If Re-INVITE arrives, branch to 'handle_reinvite' -->
+  <recv request="INVITE" optional="true" next="handle_reinvite" />
+  <recv request="BYE" timeout="10000" ontimeout="play_media" next="call_end" />
+
+  <!-- 5. Normal call termination -->
+  <label id="call_end"/>
+  <send next="end_scenario">
+</scenario>
 
 ```
 
