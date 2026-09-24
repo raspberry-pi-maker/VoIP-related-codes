@@ -388,14 +388,14 @@ If SIPp interacts with a device located on the same host or within the internal 
       [last_To:];tag=[pid]SIPpTag[call_number]
       [last_Call-ID:]
       [last_CSeq:]
-      Contact: <sip:49.50.139.21:[local_port]>
+      Contact: <sip:X.X.139.21:[local_port]>
       Content-Type: application/sdp
       Content-Length: [len]
 
       v=0
-      o=user1 53655765 2353687637 IN IP4 49.50.139.21
+      o=user1 53655765 2353687637 IN IP4 X.X.139.21
       s=SIPp
-      c=IN IP4 49.50.139.21
+      c=IN IP4 X.X.139.21
       t=0 0
       m=audio [auto_media_port] RTP/AVP 0
       a=rtpmap:0 PCMU/8000
