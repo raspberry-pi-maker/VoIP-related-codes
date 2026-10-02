@@ -120,7 +120,7 @@
 
 <br>
 
-## Useful Tools
+## Tools
 
 * [VSCode extension for Freeswitch Lua script](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/tools/README.md). 
 
