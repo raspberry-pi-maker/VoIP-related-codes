@@ -438,7 +438,7 @@ Prepare the SIPp command as follows.
 ``` bash
 # sipp -sf uas_media.xml -i [local ip] -mi [local ip] -p [sip port] -mp [local media port]
 
-sipp -sf uas_media.xml -i 10.10.10.10 -mi l10.10.10.10 -p 5080 -mp 10000
+sipp -sf uas_media.xml -i 10.10.10.10 -mi 10.10.10.10 -p 5080 -mp 10000
 
 ```
 
