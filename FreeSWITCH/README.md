@@ -97,6 +97,9 @@
 
 * [Managing extensions using database](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/Managing%20extensions%20using%20database). 
 
+* [Managing gateways using database](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/Managing%20gateways%20using%20database). 
+
+
 * [NAT Configuration](https://github.com/raspberry-pi-maker/VoIP-related-codes/tree/main/FreeSWITCH/NAT%20Configuration). 
 
 
