@@ -5,6 +5,8 @@ This is a method of managing extensions using DB instead of conf/directory. free
 
 There are two ways to dynamically manage device registration: using Lua scripts or using mod_xml_curl. The following table compares the pros and cons of the two methods.
 
+# First - Using lua script
+=======
 <br>
 
 | Criteria | Embedded Lua Script (`xml-handler-script`) | `mod_xml_curl` |
@@ -25,9 +27,6 @@ There are two ways to dynamically manage device registration: using Lua scripts 
 
 <br>
 
-<<<<<<< HEAD
-# First - Using lua script
-=======
 >>>>>>> 9e19aa3071215b547ff4e24bc06b9b969a64bd4f
 To perform real-time authentication using Lua script, add the following to the lua.conf.xml file.
 
@@ -600,7 +599,6 @@ Since `sofia::register_failure`, `sofia::unregister`, and `sofia::expire` are re
 * Retaining Lua Hooks: You can continue to use Lua hooks as defined in `lua.conf.xml` without any conflicts, while delegating only the provision of authentication XML to `mod_xml_curl`.
 
 * Transitioning to ESL (Event Socket Library): If you intend to consolidate all business logic into a central server, a more effective approach is to connect a Python or Node.js backend daemon to the FreeSWITCH Event Socket (inbound/outbound). This allows you to subscribe to specific custom events—such as `sofia::register_failure`, `sofia::unregister`, and `sofia::expire`—and handle database operations asynchronously.
-
 
 <br><br>
 
