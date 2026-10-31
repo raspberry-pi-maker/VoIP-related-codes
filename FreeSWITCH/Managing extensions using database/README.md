@@ -30,19 +30,28 @@ To perform real-time authentication using Lua script, add the following to the l
 ```xml
 <param name="xml-handler-script" value="gen_dir_user_xml.lua"/>
 <param name="xml-handler-bindings" value="directory"/>
+<hook event="CUSTOM" subclass="sofia::register_failure" script="sofia_register_failure.lua"/> <!-- Handling register failure events -->
+<hook event="CUSTOM" subclass="sofia::unregister" script="sofia_unregister.lua"/> <!-- Handling unregister events -->
+<hook event="CUSTOM" subclass="sofia::expire" script="sofia_expire.lua"/>  <!-- Handling register expire events -->
 ```
 <br>
 
-## sample lua script
+## sample lua script (gen_dir_user_xml.lua)
+
 <br>
+
 The following is a Lua file for testing that does not use SQL. Because this example returns the authentication request number as xml, register will succeed for all requests.
 
+<br>
+
 ```lua
+-- gen_dir_user_xml.lua
+
 freeswitch.consoleLog("notice", "Debug from gen_dir_user_xml.lua, provided params:\n" .. params:serialize() .. "\n")
  
 local req_domain = params:getHeader("domain")
-local req_key    = params:getHeader("key")  -- key:id로 넘어옴
-local req_user   = params:getHeader("user") -- 내선 번호 
+local req_key    = params:getHeader("key")  -- key:id
+local req_user   = params:getHeader("user") -- station number
 
 test_domain = '$${domain}'
 test_id = req_user
@@ -70,6 +79,84 @@ XML_STRING =
 
 freeswitch.consoleLog("notice", "Debug from gen_dir_user_xml.lua, generated XML:\n" .. XML_STRING .. "\n")
 ```
+
+<br>
+
+## sofia events related to registration
+
+<br>
+
+You can receive events related to extension registration and add the necessary code. It is not strictly necessary to implement handling for these events.
+
+<br>
+
+| Event Subclass | Trigger Condition & Timing | Root Cause & Internal Behavior |
+| :--- | :--- | :--- |
+| `sofia::register_failure` | Triggered when a client's SIP registration attempt (`REGISTER`) is rejected. | • Authentication failure (invalid credentials, unknown user account)<br>• Blocked by ACL (Access Control List) or SIP profile restrictions<br>• Mismatched authentication headers or no response following a `401 Unauthorized` / `407 Proxy Authentication Required` challenge |
+| `sofia::unregister` | Triggered when a client explicitly requests de-registration. | • Client shuts down or logs out and sends a `REGISTER` request with an `Expires: 0` header<br>• Explicit session termination using a `0` expiration parameter in the `Contact` header |
+| `sofia::expire` | Triggered when a registration lease times out without being renewed. | • Client experiences network disconnection, power loss, or abrupt termination, failing to send a periodic `REGISTER` refresh<br>• FreeSWITCH internal timer detects registration timeout and purges the contact record from memory and the database |
+
+
+<br>
+
+```lua
+-- sofia_register_failure.lua
+--[[
+to-user: 5000
+to-host: X.X.X.X
+network-ip: X.X.X.X
+user-agent: Fanvil X3S 2.10.2.7008 0c383e1c1934
+]]
+
+to_user = event:getHeader("to-user")
+network_ip = event:getHeader("network-ip")
+user_agent = event:getHeader("user-agent")
+
+freeswitch.consoleLog("ERR", "[sofia_register_failure.lua] " .. to_user .. ":" .. network_ip .. ":" .. user_agent .. " => delete memcache" .. "\n")
+```
+<br>
+
+
+<br>
+
+```lua
+--sofia_unregister.lua
+--[[
+from-user: 5000
+from-host: X.X.X.X
+network-ip: X.X.X.X
+user-agent: Fanvil X3S 2.10.2.7008 0c383e1c1934
+]]
+
+from_user = event:getHeader("from-user")
+network_ip = event:getHeader("network-ip")
+user_agent = event:getHeader("user-agent")
+
+freeswitch.consoleLog("ERR", "[sofia_unregister.lua] " .. from_user .. ":" .. network_ip .. ":" .. user_agent .. "\n")
+```
+<br>
+
+
+<br>
+
+```lua
+-- sofia_expire.lua
+--[[
+user: 51003
+username: 51003
+host: X.X.X.X
+user-agent: Fanvil X3S 2.10.2.7008 0c383e1c1934
+network-ip: X.X.X.X
+]]
+user = event:getHeader("user")
+network_ip = event:getHeader("network-ip")
+user_agent = event:getHeader("user-agent")
+
+freeswitch.consoleLog("ERR", "[sofia_expire.lua] " .. user .. ":" .. network_ip .. ":" .. user_agent ..  "\n")
+```
+<br>
+
+
 <br><br>
 
 ## Create sqlite3 database and table
