@@ -305,7 +305,10 @@ To implement this, you must remove the automatic dialing settings from fifo.conf
 </configuration>
 ```
 
-And to pull calls from the FIFO queue, add a dial plan as follows.
+<br/>
+
+And to pull calls from the FIFO queue, add a dial plan as follows. When a call is made to extension 7001, the system retrieves the call that has been waiting the longest in the queue and connects it.
+
 
 ```xml
 <extension name="pick_up_from_fifo">
@@ -315,6 +318,17 @@ And to pull calls from the FIFO queue, add a dial plan as follows.
   </condition>
 </extension>
 ```
+
+<br/>
+
+**The method in which an agent manually dials "7001" to retrieve a waiting call operates based on the inbound pull (consumer) model and has the following characteristics:**
+
+
+* Operating Principle: As soon as the `fifo <fifo_name> out ...` dialplan command is executed on an agent's channel, that channel immediately acts as a queue consumer and bridges the waiting call.
+
+* No Configuration Required: This process does not check whether the extension is registered as a `<member>` in `fifo.conf.xml`. Any authorized extension can execute the dialplan extension to retrieve a call from the queue.
+
+* Restricting Access to Specific Extensions: Access control is managed via dialplan `<condition>` statements rather than XML `<member>` entries.
 
 <br/>
 

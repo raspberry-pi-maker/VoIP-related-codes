@@ -1,5 +1,7 @@
 # Freeswitch Callcenter using mod_callcenter
 
+<br/>
+
 A detailed description of mod_callcenter can be found in [mod_callcenter](https://developer.signalwire.com/freeswitch/FreeSWITCH-Explained/Modules/mod_callcenter_1049389/#ring-progressively-delay). 
 Please be sure to read this article.
 
@@ -22,6 +24,8 @@ I will create a test environment for call center implementation as follows.
 I prepared the following for testing.
 Four telephones (1001 and,1002) to be used by agents receiving inbound calls are connected to Freeswitch as extensions. 
 And for inbound calls, Internet telephony calls provided by telecommunication companies were used.
+
+<br>
 
 ![config](./image/1.png)<br/><br/>
 
