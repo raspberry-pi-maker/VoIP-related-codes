@@ -511,7 +511,7 @@ of their respective owners.
 
 ## License
 
-This project was cloned from <https://github.com/raspberry-pi-maker>.
+This project was created by <https://github.com/raspberry-pi-maker>.
 
 All other code and documentation are released under the MIT License. See
 [LICENSE](LICENSE) for the full text.
