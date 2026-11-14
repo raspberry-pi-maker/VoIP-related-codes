@@ -1,0 +1,29 @@
+[project]
+name = "esl_grep"
+version = "0.1.0"
+description = "Terminal UI for browsing and capturing FreeSWITCH ESL events"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+keywords = ["freeswitch", "esl", "event-socket", "tui", "textual"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Telecommunications Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications :: Telephony",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "textual>=8.0,<9",
+    "tree-sitter>=0.25",
+    "tree-sitter-json>=0.24",
+]
+
+[project.scripts]
+esl_grep = "esl_grep.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"

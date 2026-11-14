@@ -1,0 +1,146 @@
+Screen {
+    background: $surface;
+}
+
+#toolbar {
+    height: 4;
+    padding: 0 1;
+    background: $panel;
+}
+
+#titlebar {
+    height: 3;
+    align-vertical: middle;
+}
+
+#app-title {
+    width: auto;
+    padding: 0 1;
+    color: $accent;
+    text-style: bold;
+    content-align: left middle;
+}
+
+#status {
+    width: 1fr;
+    padding: 0 2;
+    content-align: right middle;
+    color: $text-muted;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+}
+
+#status.stopped {
+    color: $text-muted;
+}
+
+#status.connecting {
+    color: $warning;
+}
+
+#status.streaming {
+    color: $success;
+    text-style: bold;
+}
+
+#status.error {
+    color: $error;
+    text-style: bold;
+}
+
+#actions {
+    width: 1fr;
+    height: 1;
+    align-horizontal: right;
+}
+
+#actions Button {
+    min-width: 5;
+    height: 1;
+    min-height: 1;
+    padding: 0 1;
+    border: none;
+    margin: 0 0 0 1;
+}
+
+#main {
+    height: 1fr;
+    padding: 1;
+}
+
+.pane {
+    background: $surface;
+    border: round $primary;
+}
+
+#event-pane {
+    width: 3fr;
+    margin-right: 1;
+}
+
+#detail-pane {
+    width: 4fr;
+}
+
+.pane-heading {
+    height: 3;
+    padding: 0 1;
+    background: $panel;
+}
+
+.pane-heading Button {
+    height: 1;
+    min-height: 1;
+    min-width: 4;
+    border: none;
+    padding: 0 1;
+    margin: 0 0 0 1;
+}
+
+.pane-title {
+    width: 1fr;
+    content-align: left middle;
+    text-style: bold;
+}
+
+.pane-count,
+.pane-meta {
+    width: auto;
+    content-align: right middle;
+    color: $text-muted;
+}
+
+#event-table {
+    height: 1fr;
+}
+
+#detail-meta {
+    height: auto;
+    min-height: 3;
+    padding: 1 1 0 1;
+    color: $text-muted;
+}
+
+#detail-search {
+    height: 3;
+    padding: 0 1;
+}
+
+#detail-key {
+    width: 1fr;
+}
+
+#detail-search-status {
+    width: auto;
+    min-width: 10;
+    height: 3;
+    padding: 0 1;
+    content-align: right middle;
+    color: $text-muted;
+}
+
+#detail-body {
+    height: 1fr;
+    border: none;
+    background: $surface;
+}
