@@ -512,6 +512,6 @@ of their respective owners.
 ## License
 
 This project was created by <https://github.com/raspberry-pi-maker>.
-
+Anyone is free to copy, improve, and use it.
 All other code and documentation are released under the MIT License. See
 [LICENSE](LICENSE) for the full text.
