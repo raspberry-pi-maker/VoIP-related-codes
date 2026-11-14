@@ -60,6 +60,19 @@ wherever Python runs.
 - Connection and authentication errors are shown in the status bar and as
   notifications
 
+
+## Screenshot 
+
+<br>
+
+![Apply filter](image/1.png)
+
+<br>
+
+![List and details of received events](image/1.png)
+
+<br>
+
 ## Requirements
 
 - Python **3.10 or newer**
