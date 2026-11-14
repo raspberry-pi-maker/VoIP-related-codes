@@ -337,6 +337,12 @@ asyncio.run(main())
 
 ## Troubleshooting
 
+### `Screen color issue`
+
+If the screen colors appear different from those in the screenshots,
+open the ~/.bashrc file and add the following line:
+export TERM=xterm-256color
+
 ### `Connection refused` or `Connection timed out`
 
 - Confirm FreeSWITCH is running: `fs_cli -x "status"`.
