@@ -69,7 +69,7 @@ wherever Python runs.
 
 <br>
 
-![List and details of received events](image/1.png)
+![List and details of received events](image/2.png)
 
 <br>
 
